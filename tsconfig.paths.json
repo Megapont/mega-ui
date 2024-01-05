@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+
+    "paths": {
+      "@*": ["./*"],
+      "@common/*": ["lib/common/*"],
+      "@contexts/*": ["contexts/*"],
+      "@utils/*": ["lib/utils/*"],
+      "@widgets/*": ["widgets/*"],
+      "@images/*": ["public/img/*"]
+    }
+  }
+}

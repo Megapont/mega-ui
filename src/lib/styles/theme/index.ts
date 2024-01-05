@@ -1,15 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { extendTheme } from '@chakra-ui/react';
 
-import { colors } from './colors';
-import { components } from './components';
-import { config } from './config';
-import { fonts } from './fonts';
+import * as components from './components';
+import * as config from './config';
+import * as foundations from './foundations';
 
-const customTheme = extendTheme({
-  fonts,
-  colors,
+const theme: Record<string, any> = extendTheme({
   config,
-  components,
+  components: { ...components },
+  ...foundations,
 });
 
-export default customTheme;
+export default extendTheme(theme);

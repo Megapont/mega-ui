@@ -1,27 +1,33 @@
 'use client';
 
-import { Box } from '@chakra-ui/react';
-import type { ReactNode } from 'react';
+import { Box, Container } from '@chakra-ui/react';
+import { motion } from 'framer-motion';
 
-import Footer from './Footer';
-import Header from './Header';
+import { MainNavbar } from '@lib/components/MainNavbar';
 
-type LayoutProps = {
-  children: ReactNode;
+const FADE_IN_VARIANTS = {
+  hidden: { opacity: 0, x: 0, y: 0 },
+  enter: { opacity: 1, x: 0, y: 0 },
+  exit: { opacity: 0, x: 0, y: 0 },
 };
 
-const Layout = ({ children }: LayoutProps) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const Layout = ({ header, children }: any) => {
   return (
-    <Box margin="0 auto" maxWidth={800} transition="0.5s ease-out">
-      <Box margin="8">
-        <Header />
-        <Box as="main" marginY={22}>
-          {children}
-        </Box>
-        <Footer />
+    <motion.div
+      variants={FADE_IN_VARIANTS}
+      initial={FADE_IN_VARIANTS.hidden}
+      animate={FADE_IN_VARIANTS.enter}
+      exit={FADE_IN_VARIANTS.exit}
+      transition={{ duration: 0.75, type: 'linear' }}
+    >
+      <MainNavbar />
+      <Box as="section">
+        <Container maxW="5xl" mt="6" pt="6">
+          {header}
+        </Container>
       </Box>
-    </Box>
+      {children}
+    </motion.div>
   );
 };
-
-export default Layout;
