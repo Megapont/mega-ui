@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/no-duplicate-string */
 import type { StyleFunctionProps } from '@chakra-ui/theme-tools';
 import { mode, transparentize } from '@chakra-ui/theme-tools';
 

@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 'use client';
 
-import { Box, Container } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
+
+import { AppNavbar } from '@lib/components/AppNavbar';
 
 const FADE_IN_VARIANTS = {
   hidden: { opacity: 0, x: 0, y: 0 },
@@ -9,8 +12,7 @@ const FADE_IN_VARIANTS = {
   exit: { opacity: 0, x: 0, y: 0 },
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const Layout = ({ header, children }: any) => {
+export const AppLayout = ({ header, children }: any) => {
   return (
     <motion.div
       variants={FADE_IN_VARIANTS}
@@ -19,9 +21,8 @@ export const Layout = ({ header, children }: any) => {
       exit={FADE_IN_VARIANTS.exit}
       transition={{ duration: 0.75, type: 'linear' }}
     >
-      <Box as="section">
-        <Container maxW="5xl">{header}</Container>
-      </Box>
+      <AppNavbar />
+      {header}
       {children}
     </motion.div>
   );

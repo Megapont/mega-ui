@@ -1,9 +1,20 @@
 /* eslint-disable radix */
 import { c32addressDecode } from 'c32check';
+import localFont from 'next/font/local';
 
 export const contractPrincipal = (address: string) => {
   return address.split('.');
 };
+
+export const lisbeth = localFont({
+  src: [
+    {
+      path: '../../../public/fonts/lisbeth-display.otf',
+    },
+  ],
+  variable: '--font-lisbeth',
+  style: 'normal',
+});
 
 export const getExplorerLink = (txId: string) => {
   return process.env.NODE_ENV !== 'production'

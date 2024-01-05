@@ -2,12 +2,14 @@ import type { Metadata, Viewport } from 'next';
 
 import Providers from '@app/providers';
 import { Layout } from '@lib/layout';
+import './globals.css';
+import { lisbeth } from '@lib/common/helpers';
 
 type RootLayoutProps = {
   children: React.ReactNode;
 };
 
-const APP_NAME = 'nextarter-chakra';
+const APP_NAME = 'megapont-dao';
 
 export const metadata: Metadata = {
   title: { default: APP_NAME, template: '%s | nextarter-chakra' },
@@ -44,7 +46,7 @@ export const viewport: Viewport = {
 
 const RootLayout = ({ children }: RootLayoutProps) => {
   return (
-    <html lang="en">
+    <html lang="en" className={`${lisbeth.variable}`}>
       <body>
         <Providers>
           <Layout>{children}</Layout>

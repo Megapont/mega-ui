@@ -7,15 +7,14 @@ import {
   ButtonGroup,
   Flex,
   HStack,
-  Image,
   Popover,
   PopoverContent,
   PopoverTrigger,
   SimpleGrid,
   Stack,
   Tab,
-  Tabs,
   TabList,
+  Tabs,
   Text,
   useBreakpointValue,
 } from '@chakra-ui/react';
@@ -23,8 +22,7 @@ import { useAccount, useAuth, useNetwork } from '@micro-stacks/react';
 import Avatar from 'boring-avatars';
 import { fetchAccountStxBalance, fetchNamesByAddress } from 'micro-stacks/api';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { FaEllipsisH } from 'react-icons/fa';
 
 import { truncate, ustxToStx } from '@lib/common/helpers';
@@ -32,12 +30,10 @@ import { Card } from '@lib/components/Card';
 import { WalletConnectButton } from '@lib/components/WalletConnectButton';
 
 export const AppNavbar = () => {
-  const router = useRouter();
-  const { dao } = router.query as any;
   const { network } = useNetwork();
   const [bns, setBns] = useState<string | undefined>('');
   const [balance, setBalance] = useState<string | undefined>('');
-  const { stxAddress }: any = useAccount();
+  const { stxAddress } = useAccount();
   const { isSignedIn, openAuthRequest, signOut } = useAuth();
   const isDesktop = useBreakpointValue({ base: false, lg: true });
   // const NETWORK_CHAIN_ID: any = {
@@ -52,9 +48,6 @@ export const AppNavbar = () => {
   const handleSignOut = () => {
     signOut();
     localStorage.setItem('chakra-ui-color-mode', 'dark');
-  };
-  const isSelected = (path: string) => {
-    return router.pathname.split('/')[3] === path;
   };
 
   useEffect(() => {
@@ -99,40 +92,38 @@ export const AppNavbar = () => {
           justify={isMobile ? 'space-between' : 'space-around'}
           spacing="2"
         >
-          <Link href={`/d/${dao}`}>
-            <Image
-              cursor="pointer"
-              height="30px"
-              src="/img/logo-only.png"
-              alt="logo"
-            />
+          <Link href="/">
+            <Flex justify="center" align="center" gap="2">
+              <Text fontSize="4xl" className="lisbeth-dao-text">
+                DAO
+              </Text>
+            </Flex>
           </Link>
           {isDesktop ? (
             <Flex justify="space-between" flex="1">
               <Tabs color="white" isFitted variant="unstyled">
-                <TabList>
-                  {['Vault', 'Proposals', 'Governance', 'Extensions'].map(
-                    (item) => (
-                      <Link
-                        key={item}
-                        href={`/d/${dao}/${item?.toLocaleLowerCase()}`}
-                      >
-                        <Tab
-                          key={item}
-                          fontSize="sm"
-                          color={
-                            isSelected(item.toLowerCase())
-                              ? 'light.900'
-                              : 'gray.900'
-                          }
-                          _hover={{ color: 'light.800' }}
-                        >
-                          {item}
-                        </Tab>
-                      </Link>
-                    )
-                  )}
-                </TabList>
+                {isSignedIn && (
+                  <TabList>
+                    {['Vault', 'Proposals', 'Governance', 'Extensions'].map(
+                      (item) => (
+                        <Link key={item} href={`/`}>
+                          <Tab
+                            key={item}
+                            fontSize="sm"
+                            // color={
+                            //   isSelected(item.toLowerCase())
+                            //     ? 'light.900'
+                            //     : 'gray.900'
+                            // }
+                            _hover={{ color: 'light.800' }}
+                          >
+                            {item}
+                          </Tab>
+                        </Link>
+                      )
+                    )}
+                  </TabList>
+                )}
               </Tabs>
               <HStack spacing="3">
                 <ButtonGroup spacing="6" alignItems="center">

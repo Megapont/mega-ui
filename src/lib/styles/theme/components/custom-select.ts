@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/no-nested-template-literals */
 import type { StyleFunctionProps } from '@chakra-ui/theme-tools';
 import { getColor, mode, transparentize } from '@chakra-ui/theme-tools';
 
