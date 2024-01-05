@@ -7,14 +7,15 @@ import {
   ButtonGroup,
   Flex,
   HStack,
+  Image,
   Popover,
   PopoverContent,
   PopoverTrigger,
   SimpleGrid,
   Stack,
   Tab,
-  TabList,
   Tabs,
+  TabList,
   Text,
   useBreakpointValue,
 } from '@chakra-ui/react';
@@ -22,7 +23,7 @@ import { useAccount, useAuth, useNetwork } from '@micro-stacks/react';
 import Avatar from 'boring-avatars';
 import { fetchAccountStxBalance, fetchNamesByAddress } from 'micro-stacks/api';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FaEllipsisH } from 'react-icons/fa';
 
 import { truncate, ustxToStx } from '@lib/common/helpers';
@@ -94,6 +95,12 @@ export const AppNavbar = () => {
         >
           <Link href="/">
             <Flex justify="center" align="center" gap="2">
+              <Image
+                cursor="pointer"
+                height="35px"
+                src="/megapont-logo.svg"
+                alt="logo"
+              />
               <Text fontSize="4xl" className="lisbeth-dao-text">
                 DAO
               </Text>

@@ -34,26 +34,22 @@ export async function getDAO(name: string) {
   }
 }
 
-export async function generateContractName(organization: any) {
+export async function generateContractName() {
   try {
     const { data: Proposals, error } = await supabase
       .from('Proposals')
-      .select('contractAddress, Organizations!inner(id, name, prefix)')
-      .eq('Organizations.id', organization?.id);
+      .select('contractAddress, Organizations!inner(id, name, prefix)');
+
     if (error) throw error;
     if (Proposals.length > 0) {
       const proposalSize = (defaultTo(Proposals?.length, 0) + 1)?.toString();
-      const [proposal] = Proposals;
+
       const targetLength = Proposals?.length + 1 < 1000 ? 3 : 4;
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      const contractName = `${// @ts-ignore
-      proposal?.Organizations?.prefix}-${proposalSize.padStart(
-        targetLength,
-        '0'
-      )}`;
+      const contractName = `${proposalSize.padStart(targetLength, '0')}`;
       return contractName;
     } else {
-      const contractName = `${organization?.prefix}-001`;
+      const contractName = `f-001`;
       return contractName;
     }
   } catch (error) {
@@ -393,17 +389,13 @@ export async function getParameter(
   }
 }
 
-export async function getContractsToDeploy(
-  organizationId: number,
-  currentStxAddress: string
-) {
+export async function getContractsToDeploy(currentStxAddress: string) {
   try {
     const { data, error } = await supabase
       .from('Proposals')
       .select(
         'id, contractAddress, type, transactionId, submitted, disabled, proposer, Organizations!inner(id, name, prefix)'
       )
-      .eq('Organizations.id', organizationId)
       .eq('proposer', currentStxAddress)
       .eq('submitted', false)
       .eq('disabled', false);
@@ -429,17 +421,13 @@ export async function getTransaction(transactionId: string) {
   }
 }
 
-export async function getDelegates(
-  organizationId: number,
-  currentStxAddress: string | null
-) {
+export async function getDelegates(currentStxAddress: string | null) {
   try {
     const { data, error } = await supabase
       .from('Delegates')
       .select(
         'id, delegatorAddress, delegateAddress, Organizations!inner(id, name, prefix)'
       )
-      .eq('Organizations.id', organizationId)
       .eq('delegateAddress', currentStxAddress)
       .limit(100);
     if (error) throw error;

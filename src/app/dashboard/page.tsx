@@ -20,6 +20,7 @@ import { SectionHeader } from '@lib/components/SectionHeader';
 import { Wrapper } from '@lib/components/Wrapper';
 // Animation
 import { FADE_IN_VARIANTS } from '@utils/animation';
+import { AssetTable } from '@lib/components/AssetTable';
 
 const DAODashboard = () => {
   return (
@@ -62,10 +63,10 @@ const DAODashboard = () => {
           </TabList>
           <TabPanels>
             <TabPanel px="0">
-              {/* <AssetTable color="light.900" size="md" type="fungible" /> */}
+              <AssetTable color="light.900" size="md" type="fungible" />
             </TabPanel>
             <TabPanel px="0">
-              {/* <AssetTable color="light.900" size="md" type="nonFungible" /> */}
+              <AssetTable color="light.900" size="md" type="nonFungible" />
             </TabPanel>
           </TabPanels>
         </Tabs>

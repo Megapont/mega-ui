@@ -1,5 +1,6 @@
 'use client';
 
+import { Header } from '@lib/components/Header';
 import { AppLayout } from '@lib/layout/AppLayout';
 
 type RootLayoutProps = {
@@ -7,7 +8,12 @@ type RootLayoutProps = {
 };
 
 const Layout = ({ children }: RootLayoutProps) => {
-  return <AppLayout>{children}</AppLayout>;
+  return (
+    <AppLayout>
+      <Header></Header>
+      {children}
+    </AppLayout>
+  );
 };
 
 export default Layout;

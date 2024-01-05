@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { BoxProps, Heading, HStack, Icon, Stack, Text } from '@chakra-ui/react';
 
@@ -28,15 +28,16 @@ const FADE_IN_VARIANTS = {
 export const Stat = (props: Props) => {
   const { path, label, value, assetSymbol, info, ...boxProps } = props;
   const [isHovered, setHovered] = useState(false);
-  const router = useRouter();
-  const { dao } = router.query;
-  const currentPath = router.pathname.split('/').filter((p) => p === path)[0];
+
+  const pathname = usePathname();
+
+  const currentPath = pathname.split('/').filter((p) => p === path)[0];
   const isActivePath = currentPath === path;
   return (
-    <Link passHref href={`/d/${dao}/${path}`}>
+    <Link passHref href={`/dashboard/${path}`}>
       <Card
         bg="base.800"
-        minW="auto"
+        minW="20vw"
         borderColor="base.500"
         px={{ base: '4', md: '6' }}
         py={{ base: '4', md: '6' }}

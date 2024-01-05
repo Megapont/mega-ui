@@ -1,31 +1,15 @@
-import {
-  Container,
-  Heading,
-  HStack,
-  Stack,
-  VStack,
-  useBreakpointValue,
-} from '@chakra-ui/react';
-import {
-  useDAO,
-  useToken,
-  useTokenBalance,
-  useProposals,
-} from '@common/queries';
+import { Container, Stack, useBreakpointValue } from '@chakra-ui/react';
+import { useProposals, useToken, useTokenBalance } from '@common/queries';
 import { EmptyState } from '@lib/components/EmptyState';
 import { Stat } from '@lib/components/Stat';
-import Avatar from 'boring-avatars';
 import { motion } from 'framer-motion';
 import { defaultTo } from 'lodash';
-import Link from 'next/link';
 
-import { ustxToStx, convertToken } from '@common/helpers';
+import { convertToken, ustxToStx } from '@common/helpers';
 import { FADE_IN_VARIANTS } from '@utils/animation';
 
 export const Header = () => {
-  const { dao } = useDAO();
   const { data } = useProposals();
-  const { dao: DAO } = useDAO();
   const { isLoading, isIdle, isError, token, balance } = useToken();
   const { balance: userBalance } = useTokenBalance();
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -83,7 +67,7 @@ export const Header = () => {
     return (
       <EmptyState
         heading="Unable to load balance"
-        linkTo={`/d/${dao}/proposals/create/transfer`}
+        linkTo={`/d/proposals/create/transfer`}
         buttonTitle="Try again"
       />
     );
@@ -93,43 +77,6 @@ export const Header = () => {
     <Container maxW="5xl">
       <Stack spacing={{ base: '6', lg: '4' }} mt="5">
         <Container>
-          <Stack
-            spacing="2"
-            mt="4"
-            mb="2"
-            direction={{ base: 'column', md: 'row' }}
-            justify="flex-start"
-            color="white"
-          >
-            <VStack maxW="xl" spacing="3">
-              <Link href={`/d/${dao}`}>
-                <a>
-                  <HStack align="baseline">
-                    <Avatar
-                      size={40}
-                      name={DAO?.name}
-                      variant="marble"
-                      colors={[
-                        '#50DDC3',
-                        '#624AF2',
-                        '#EB00FF',
-                        '#7301FA',
-                        '#25C2A0',
-                      ]}
-                    />
-                    <Heading
-                      size="lg"
-                      pb="2"
-                      fontWeight="light"
-                      color="light.900"
-                    >
-                      {DAO?.name}
-                    </Heading>
-                  </HStack>
-                </a>
-              </Link>
-            </VStack>
-          </Stack>
           <motion.div
             variants={FADE_IN_VARIANTS}
             initial={FADE_IN_VARIANTS.hidden}
@@ -155,45 +102,8 @@ export const Header = () => {
 
   return (
     <Container maxW="5xl">
-      <Stack spacing={{ base: '6', lg: '4' }} mt="5">
+      <Stack spacing={{ base: '6', lg: '4' }} mt="20">
         <Container>
-          <Stack
-            spacing="2"
-            mt="4"
-            mb="2"
-            direction={{ base: 'column', md: 'row' }}
-            justify="flex-start"
-            color="white"
-          >
-            <VStack maxW="xl" spacing="3">
-              <Link href={`/d/${dao}`}>
-                <a>
-                  <HStack align="baseline">
-                    <Avatar
-                      size={40}
-                      name={DAO?.name}
-                      variant="marble"
-                      colors={[
-                        '#50DDC3',
-                        '#624AF2',
-                        '#EB00FF',
-                        '#7301FA',
-                        '#25C2A0',
-                      ]}
-                    />
-                    <Heading
-                      size="lg"
-                      pb="2"
-                      fontWeight="light"
-                      color="light.900"
-                    >
-                      {DAO?.name}
-                    </Heading>
-                  </HStack>
-                </a>
-              </Link>
-            </VStack>
-          </Stack>
           <motion.div
             variants={FADE_IN_VARIANTS}
             initial={FADE_IN_VARIANTS.hidden}

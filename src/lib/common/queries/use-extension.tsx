@@ -1,6 +1,5 @@
 // Hook (use-governance-token.tsx)
 import { useQuery } from 'react-query';
-import { useDAO } from '@common/queries';
 import { findExtension } from '@common/functions';
 
 type TExtension = {
@@ -9,8 +8,7 @@ type TExtension = {
 };
 
 export function useExtension(name: string) {
-  const { dao } = useDAO();
-  const data: TExtension = findExtension(dao?.Extensions, name);
+  const data: TExtension = findExtension([], name);
   const {
     isFetching,
     isIdle,
@@ -23,7 +21,6 @@ export function useExtension(name: string) {
       return data;
     },
     {
-      enabled: !!dao,
       refetchOnWindowFocus: false,
     }
   );

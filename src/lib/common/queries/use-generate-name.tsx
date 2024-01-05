@@ -1,18 +1,15 @@
 // Hook (use-generate-name.tsx)
 import { useQuery } from 'react-query';
-import { useDAO } from '@common/queries';
 import { generateContractName } from '@common/api';
 
 export function useGenerateName() {
-  const { dao } = useDAO();
   const { isFetching, isIdle, isLoading, isError, data }: any = useQuery(
-    ['contract-name', dao],
+    ['contract-name'],
     async () => {
-      const data = await generateContractName(dao);
+      const data = await generateContractName();
       return data;
     },
     {
-      enabled: !!dao,
       refetchOnWindowFocus: false,
     }
   );

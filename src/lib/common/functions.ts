@@ -113,7 +113,5 @@ export const generatePostConditions = ({
 };
 
 export function findExtension(extensions: Array<any[]>, type: string): any {
-  return extensions?.find(
-    (extension: any) => extension.ExtensionTypes.name === type
-  );
+  return extensions?.find((extension: any) => extension.name === type);
 }
