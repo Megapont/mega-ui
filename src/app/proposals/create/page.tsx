@@ -50,6 +50,7 @@ import { FiSend } from 'react-icons/fi';
 // Store
 import CodeEditor from '@lib/components/CodeEditor';
 import { useStore } from '@lib/store/TransactionStore';
+import { useGenerateName } from '@lib/common/queries';
 
 const FADE_IN_VARIANTS = {
   hidden: { opacity: 0, x: 0, y: 0 },
@@ -116,12 +117,20 @@ const CreateProposal = () => {
         currentStep <= 0 ? (
           <></>
         ) : (
-          <HStack>
-            <FiSend fontSize="0.9rem" />
-            <Text fontSize="md" fontWeight="medium" color="light.900">
-              Ready to deploy
-            </Text>
-          </HStack>
+          <motion.div
+            variants={FADE_IN_VARIANTS}
+            initial={FADE_IN_VARIANTS.hidden}
+            animate={FADE_IN_VARIANTS.enter}
+            exit={FADE_IN_VARIANTS.exit}
+            transition={{ duration: 0.5, type: 'linear' }}
+          >
+            <HStack>
+              <FiSend fontSize="0.9rem" />
+              <Text fontSize="md" fontWeight="medium" color="light.900">
+                Ready to deploy
+              </Text>
+            </HStack>
+          </motion.div>
         ),
     },
     {
@@ -130,12 +139,20 @@ const CreateProposal = () => {
         currentStep <= 1 ? (
           <></>
         ) : (
-          <HStack>
-            <FaPaperclip fontSize="0.9rem" />
-            <Text fontSize="md" fontWeight="medium" color="light.900">
-              Details submitted
-            </Text>
-          </HStack>
+          <motion.div
+            variants={FADE_IN_VARIANTS}
+            initial={FADE_IN_VARIANTS.hidden}
+            animate={FADE_IN_VARIANTS.enter}
+            exit={FADE_IN_VARIANTS.exit}
+            transition={{ duration: 0.5, type: 'linear' }}
+          >
+            <HStack>
+              <FaPaperclip fontSize="0.9rem" />
+              <Text fontSize="md" fontWeight="medium" color="light.900">
+                Details submitted
+              </Text>
+            </HStack>
+          </motion.div>
         ),
     },
 
@@ -147,7 +164,13 @@ const CreateProposal = () => {
 
   const SmartContractCode = () => {
     return (
-      <>
+      <motion.div
+        variants={FADE_IN_VARIANTS}
+        initial={FADE_IN_VARIANTS.hidden}
+        animate={FADE_IN_VARIANTS.enter}
+        exit={FADE_IN_VARIANTS.exit}
+        transition={{ duration: 0.5, type: 'linear' }}
+      >
         <Stack
           spacing="0"
           mb="2"
@@ -171,13 +194,19 @@ const CreateProposal = () => {
             <CodeEditor></CodeEditor>
           </Stack>
         </Stack>
-      </>
+      </motion.div>
     );
   };
 
   const ProposalDetails = () => {
     return (
-      <>
+      <motion.div
+        variants={FADE_IN_VARIANTS}
+        initial={FADE_IN_VARIANTS.hidden}
+        animate={FADE_IN_VARIANTS.enter}
+        exit={FADE_IN_VARIANTS.exit}
+        transition={{ duration: 0.5, type: 'linear' }}
+      >
         <Stack
           spacing="0"
           mb="5"
@@ -262,13 +291,20 @@ const CreateProposal = () => {
             />
           </FormControl>
         </Stack>
-      </>
+      </motion.div>
     );
   };
 
   const ProposalReview = () => {
+    const { data: contractName } = useGenerateName();
     return (
-      <>
+      <motion.div
+        variants={FADE_IN_VARIANTS}
+        initial={FADE_IN_VARIANTS.hidden}
+        animate={FADE_IN_VARIANTS.enter}
+        exit={FADE_IN_VARIANTS.exit}
+        transition={{ duration: 0.5, type: 'linear' }}
+      >
         <Stack
           maxW="md"
           spacing="8"
@@ -286,7 +322,7 @@ const CreateProposal = () => {
               colors={['#50DDC3', '#624AF2', '#EB00FF', '#7301FA', '#25C2A0']}
             />
             <Text fontSize="2xl" fontWeight="semibold" color="light.900">
-              {title}
+              {`mdp-${contractName}`}
             </Text>
           </Stack>
           <Stack
@@ -322,7 +358,7 @@ const CreateProposal = () => {
             </Stack>
           </Stack>
         </Stack>
-      </>
+      </motion.div>
     );
   };
 

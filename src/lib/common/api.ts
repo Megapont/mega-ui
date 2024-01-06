@@ -37,7 +37,7 @@ export async function generateContractName() {
   try {
     const { data: Proposals, error } = await supabase
       .from('Proposals')
-      .select('contractAddress, Organizations!inner(id, name, prefix)');
+      .select('contractAddress');
 
     if (error) throw error;
     if (Proposals.length > 0) {
