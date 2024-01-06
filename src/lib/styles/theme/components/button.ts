@@ -45,10 +45,7 @@ const variants = {
     color: 'emphasized',
     bg: mode('white', 'gray.800')(props),
     _hover: {
-      bg: mode(
-        darken('gray.50', 1)(props.theme),
-        transparentize('gray.700', 0.4)(props.theme)
-      )(props),
+      bg: 'whiteAlpha.200',
     },
     _checked: {
       bg: mode('gray.100', 'gray.700')(props),

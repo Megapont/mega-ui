@@ -34,7 +34,7 @@ export const Stat = (props: Props) => {
   const currentPath = pathname.split('/').filter((p) => p === path)[0];
   const isActivePath = currentPath === path;
   return (
-    <Link passHref href={`/dashboard/${path}`}>
+    <Link passHref href={`/${path}`}>
       <Card
         bg="base.800"
         minW="20vw"
@@ -42,15 +42,15 @@ export const Stat = (props: Props) => {
         px={{ base: '4', md: '6' }}
         py={{ base: '4', md: '6' }}
         {...(isActivePath && {
-          borderBottomColor: 'secondary.900',
-          borderBottomWidth: '1px',
+          borderBottomColor: 'red.900',
+          borderBottomWidth: '2px',
           borderBottomRadius: 'sm',
         })}
         {...boxProps}
         _hover={{
           cursor: 'pointer',
-          borderBottomColor: 'secondary.900',
-          borderBottomWidth: '1px',
+          borderBottomColor: 'red.900',
+          borderBottomWidth: '2px',
           borderBottomRadius: 'sm',
         }}
       >

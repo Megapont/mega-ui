@@ -9,11 +9,11 @@ type RootLayoutProps = {
   children: React.ReactNode;
 };
 
-const APP_NAME = 'megapont-dao';
+const APP_NAME = 'mega DAO';
 
 export const metadata: Metadata = {
-  title: { default: APP_NAME, template: '%s | nextarter-chakra' },
-  description: 'Next.js + chakra-ui + TypeScript template',
+  title: { default: APP_NAME, template: '%s | mega DAO' },
+  description: 'A DAO for the megapont community',
   applicationName: APP_NAME,
   appleWebApp: {
     capable: true,
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     telephone: false,
   },
   openGraph: {
-    url: 'https://nextarter-chakra.sznm.dev',
+    url: 'https://dao.magepont.com',
     title: 'nextarter-chakra',
     description: 'Next.js + chakra-ui + TypeScript template',
     images: {
@@ -32,10 +32,10 @@ export const metadata: Metadata = {
       alt: 'nextarter-chakra.sznm.dev og-image',
     },
   },
-  twitter: {
-    creator: '@sozonome',
-    card: 'summary_large_image',
-  },
+  // twitter: {
+  //   creator: '@sozonome',
+  //   card: 'summary_large_image',
+  // },
 };
 
 export const viewport: Viewport = {

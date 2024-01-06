@@ -98,12 +98,9 @@ export const AppNavbar = () => {
               <Image
                 cursor="pointer"
                 height="35px"
-                src="/megapont-logo.svg"
+                src="/MEGA_DAO.png"
                 alt="logo"
               />
-              <Text fontSize="4xl" className="lisbeth-dao-text">
-                DAO
-              </Text>
             </Flex>
           </Link>
           {isDesktop ? (
@@ -111,24 +108,22 @@ export const AppNavbar = () => {
               <Tabs color="white" isFitted variant="unstyled">
                 {isSignedIn && (
                   <TabList>
-                    {['Vault', 'Proposals', 'Governance', 'Extensions'].map(
-                      (item) => (
-                        <Link key={item} href={`/`}>
-                          <Tab
-                            key={item}
-                            fontSize="sm"
-                            // color={
-                            //   isSelected(item.toLowerCase())
-                            //     ? 'light.900'
-                            //     : 'gray.900'
-                            // }
-                            _hover={{ color: 'light.800' }}
-                          >
-                            {item}
-                          </Tab>
-                        </Link>
-                      )
-                    )}
+                    {['Vault', 'Proposals'].map((item) => (
+                      <Link key={item} href={`/${item.toLowerCase()}`}>
+                        <Tab
+                          key={item}
+                          fontSize="sm"
+                          // color={
+                          //   isSelected(item.toLowerCase())
+                          //     ? 'light.900'
+                          //     : 'gray.900'
+                          // }
+                          _hover={{ color: 'light.800' }}
+                        >
+                          {item}
+                        </Tab>
+                      </Link>
+                    ))}
                   </TabList>
                 )}
               </Tabs>

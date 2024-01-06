@@ -2,7 +2,7 @@
 
 'use client';
 
-import { Box, Button, Stack } from '@chakra-ui/react';
+import { Box, Button, Flex, Link, Stack, Image } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 
 import { Wrapper } from '@lib/components/Wrapper';
@@ -21,6 +21,29 @@ export default function Index() {
 
   return (
     <>
+      <Box
+        as="nav"
+        position="fixed"
+        w="100%"
+        p="3"
+        px="9"
+        bg="base.900"
+        borderBottom="1px solid"
+        borderColor="base.800"
+        zIndex="2"
+      >
+        <Link href="/">
+          <Flex justify="start" align="center" gap="2">
+            <Image
+              cursor="pointer"
+              height="35px"
+              src="/MEGA_DAO.png"
+              alt="logo"
+            />
+          </Flex>
+        </Link>
+      </Box>
+
       <motion.div
         variants={SLIDE_UP_VARIANTS}
         initial={SLIDE_UP_VARIANTS.hidden}
@@ -68,15 +91,16 @@ export default function Index() {
                       <Button
                         marginTop={10}
                         variant="outline"
-                        borderColor="white"
-                        backgroundColor="transparent"
+                        bgColor={'transparent'}
+                        textColor={'white'}
+                        colorScheme="base"
                         borderRadius="50px"
                         rightIcon={<FaAngleRight></FaAngleRight>}
-                        onClick={() => router.push('/dashboard')}
+                        onClick={() => router.push('/vault')}
                         px={5}
                         py={6}
                       >
-                        Go to Dashboard
+                        Go to Dapp
                       </Button>
                     </Stack>
                   </motion.div>
