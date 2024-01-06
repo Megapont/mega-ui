@@ -63,10 +63,26 @@ const DAODashboard = () => {
           </TabList>
           <TabPanels>
             <TabPanel px="0">
-              <AssetTable color="light.900" size="md" type="fungible" />
+              <motion.div
+                variants={FADE_IN_VARIANTS}
+                initial={FADE_IN_VARIANTS.hidden}
+                animate={FADE_IN_VARIANTS.enter}
+                exit={FADE_IN_VARIANTS.exit}
+                transition={{ duration: 0.25, type: 'linear' }}
+              >
+                <AssetTable color="light.900" size="md" type="fungible" />
+              </motion.div>
             </TabPanel>
             <TabPanel px="0">
-              <AssetTable color="light.900" size="md" type="nonFungible" />
+              <motion.div
+                variants={FADE_IN_VARIANTS}
+                initial={FADE_IN_VARIANTS.hidden}
+                animate={FADE_IN_VARIANTS.enter}
+                exit={FADE_IN_VARIANTS.exit}
+                transition={{ duration: 0.25, type: 'linear' }}
+              >
+                <AssetTable color="light.900" size="md" type="nonFungible" />
+              </motion.div>
             </TabPanel>
           </TabPanels>
         </Tabs>

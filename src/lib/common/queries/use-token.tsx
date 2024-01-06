@@ -1,11 +1,14 @@
 // Hook (use-token.tsx)
 import { useQuery } from 'react-query';
-import { useExtension } from '@common/queries';
+//import { useExtension } from '@common/queries';
 import { getTokenMetadata, getVaultBalance } from '@common/api';
+import { MEGA_GOVERNANCE_CONTRACT, MEGA_VAULT_CONTRACT } from '../constants';
 
 export function useToken() {
-  const { extension: governanceToken } = useExtension('Governance Token');
-
+  //const { extension: governanceToken } = useExtension('Governance Token');
+  const governanceToken = {
+    contractAddress: MEGA_GOVERNANCE_CONTRACT,
+  };
   const {
     isFetching,
     isIdle,
@@ -30,7 +33,10 @@ export function useToken() {
     }
   );
 
-  const { extension: vault } = useExtension('Vault');
+  //const { extension: vault } = useExtension('Vault');
+  const vault = {
+    contractAddress: MEGA_VAULT_CONTRACT,
+  };
   const { data: balance } = useQuery(
     'vault-balance',
     async () => {

@@ -41,7 +41,6 @@ export const AppFooter = () => {
             variant="outline"
             borderRadius="50%"
             borderColor="white"
-            bgBlendMode={'normal'}
             bgColor={'base.800'}
             aria-label={'discord'}
             icon={<FaDiscord></FaDiscord>}
@@ -50,7 +49,6 @@ export const AppFooter = () => {
             variant="outline"
             borderRadius="50%"
             borderColor="white"
-            bgBlendMode={'normal'}
             bgColor={'base.800'}
             aria-label={'twitter'}
             icon={<FaTwitter></FaTwitter>}
@@ -59,7 +57,6 @@ export const AppFooter = () => {
             variant="outline"
             borderRadius="50%"
             borderColor="white"
-            bgBlendMode={'normal'}
             bgColor={'base.800'}
             aria-label="medium"
             icon={<FaMedium></FaMedium>}

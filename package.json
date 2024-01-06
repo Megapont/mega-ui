@@ -28,6 +28,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@micro-stacks/react": "^1.0.9",
+    "@stacks/transactions": "^6.11.0",
     "@supabase/supabase-js": "^2.39.2",
     "boring-avatars": "^1.10.1",
     "c32check": "^2.0.0",

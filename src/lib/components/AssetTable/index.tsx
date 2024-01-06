@@ -16,7 +16,6 @@ import {
 import { EmptyState } from '@lib/components/EmptyState';
 
 // Web3
-import { useNetwork } from '@micro-stacks/react';
 import { fetchReadOnlyFunction } from 'micro-stacks/api';
 
 // Utils
@@ -29,6 +28,7 @@ import { useToken } from '@common/queries';
 // Animation
 import { motion } from 'framer-motion';
 import { FADE_IN_VARIANTS } from '@utils/animation';
+import { stacksNetwork } from '@lib/common/constants';
 
 type AssetTableProps = {
   type: string;
@@ -47,7 +47,6 @@ const initialState = {
 export const AssetTable = (props: TableProps & AssetTableProps) => {
   const [state, setState] = useState<TAssetTable>(initialState);
   const { type } = props;
-  const { network } = useNetwork();
 
   const { isLoading, isIdle, isError, balance } = useToken();
 
@@ -61,13 +60,14 @@ export const AssetTable = (props: TableProps & AssetTableProps) => {
     const tokenValue = nonFungibleTokens[key];
     return {
       name: tokenKey,
-      balance: tokenValue?.balance,
+      balance: tokenValue?.count,
       totalSent: tokenValue?.total_sent,
       totalReceived: tokenValue?.total_received,
     };
   });
 
   useEffect(() => {
+    const network = new stacksNetwork();
     const fetchAssets = async () => {
       try {
         const fetchAssetData = async (
@@ -152,7 +152,7 @@ export const AssetTable = (props: TableProps & AssetTableProps) => {
       }
     };
     fetchAssets();
-  }, [balance, fungibleTokens, network, state]);
+  }, [balance, fungibleTokens, state]);
 
   const listItems =
     type === 'fungible' ? state.fungibleTokensList : nonFungibleTokensList;
@@ -253,9 +253,11 @@ export const AssetTable = (props: TableProps & AssetTableProps) => {
                         <Text color="light.900" fontWeight="medium">
                           {item.name}
                         </Text>
-                        <Text fontSize="xs" color="gray.900">
-                          ({symbol})
-                        </Text>
+                        {type === 'fungible' && (
+                          <Text fontSize="xs" color="gray.900">
+                            ({symbol})
+                          </Text>
+                        )}
                       </HStack>
                     </HStack>
                   </Td>

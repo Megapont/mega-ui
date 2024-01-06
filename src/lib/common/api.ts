@@ -5,7 +5,6 @@ import {
   fetchContractEventsById,
   fetchReadOnlyFunction,
   fetchAccountBalances,
-  fetchFtMetadataForContractId,
   fetchTransaction,
 } from 'micro-stacks/api';
 import {
@@ -148,12 +147,12 @@ export async function getContractProposalByTx(transactionId: string) {
 
 export async function getTokenMetadata(contractId: string) {
   try {
-    const network = new stacksNetwork();
-    const tokenMetadata = await fetchFtMetadataForContractId({
-      url: network.getCoreApiUrl(),
-      contractId: contractId,
-    });
-    return tokenMetadata;
+    //const network = new stacksNetwork();
+    const tokenMetadata = await fetch(`
+    https://api.hiro.so/metadata/v1/ft/${contractId}`);
+    const result = tokenMetadata.json();
+
+    return result;
   } catch (e: any) {
     console.error({ e });
   }
@@ -166,6 +165,7 @@ export async function getVaultBalance(address: string) {
       url: network.getCoreApiUrl(),
       principal: address,
     });
+
     return balance;
   } catch (e: any) {
     console.error({ e });

@@ -1,7 +1,7 @@
-import { StacksMocknet, StacksMainnet } from 'micro-stacks/network';
+import { StacksMainnet } from 'micro-stacks/network';
 
 export const stacksNetwork =
-  process.env.NODE_ENV === 'production' ? StacksMainnet : StacksMocknet;
+  process.env.NODE_ENV === 'production' ? StacksMainnet : StacksMainnet;
 export const baseUrl =
   process.env.NODE_ENV === 'production'
     ? 'https://app.stackerdaos.com'
@@ -10,6 +10,12 @@ export const devnet = process.env.NODE_ENV === 'development';
 export const EXECUTOR_DAO_CONTRACT = devnet
   ? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.executor-dao'
   : 'testnet_contract';
+export const MEGA_GOVERNANCE_CONTRACT = devnet
+  ? 'SP3D6PV2ACBPEKYJTCMH7HEN02KP87QSP8KTEH335.mega'
+  : 'SP3D6PV2ACBPEKYJTCMH7HEN02KP87QSP8KTEH335.mega';
+export const MEGA_VAULT_CONTRACT = devnet
+  ? 'SPKPXQ0X3A4D1KZ4XTP1GABJX1N36VW10D02TK9X.mega-vault'
+  : 'SPKPXQ0X3A4D1KZ4XTP1GABJX1N36VW10D02TK9X.mega-vault';
 export const STACKS_API_URL = devnet
   ? 'http://localhost:3999'
   : 'https://stacks-node-api.testnet.stacks.co';
