@@ -10,19 +10,21 @@ import { PostConditionMode } from 'micro-stacks/transactions';
 type ContractDeployType = {
   label: JSX.Element;
   proposalAddress: string;
+  startBlockHeight: number;
+
   onFinish?: (data: any) => void;
 };
 
 export const ProposeButton = (props: ButtonProps & ContractDeployType) => {
   const { stxAddress } = useAccount();
   const { openContractCall, isRequestPending } = useOpenContractCall();
-  const { proposalAddress, onFinish, label } = props;
+  const { proposalAddress, onFinish, label, startBlockHeight } = props;
 
   const submission = {
     contractAddress: MEGA_SUBMISSION_CONTRACT,
   };
   const { currentBlockHeight } = useBlocks();
-  const startHeight = currentBlockHeight + 30;
+  console.log('currentBlockHeight', currentBlockHeight);
 
   const contractAddress = submission?.contractAddress?.split('.')[0];
   const contractName = submission?.contractAddress?.split('.')[1];
@@ -30,7 +32,7 @@ export const ProposeButton = (props: ButtonProps & ContractDeployType) => {
   const functionName = 'propose';
   const functionArgs = [
     contractPrincipalCV(stxAddress!, proposalAddress),
-    uintCV(startHeight),
+    uintCV(startBlockHeight),
   ];
 
   const handleProposal = async () => {

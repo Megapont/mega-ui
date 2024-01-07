@@ -1,13 +1,14 @@
 // Hook (use-auth.tsx)
 import { useQuery } from 'react-query';
 import { useAuth as useMicroStacks } from '@micro-stacks/react';
-import { useExtension, useTokenBalance } from '@common/queries';
+import { useTokenBalance } from '@common/queries';
 import { getParameter } from '@common/api';
+import { MEGA_SUBMISSION_CONTRACT, MEGA_VOTING_CONTRACT } from '../constants';
 
 export function useAuth() {
   const { balance } = useTokenBalance();
-  const { extension: submission } = useExtension('Submission');
-  const { extension: voting } = useExtension('Voting');
+  const submission = { contractAddress: MEGA_SUBMISSION_CONTRACT };
+  const voting = { contractAddress: MEGA_VOTING_CONTRACT };
   const { isSignedIn } = useMicroStacks();
   const signedInOptions = {
     enabled:

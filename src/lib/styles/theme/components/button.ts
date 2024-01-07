@@ -42,16 +42,17 @@ const variants = {
     _active: { bg: 'whiteAlpha.200' },
   },
   outline: (props: StyleFunctionProps) => ({
-    color: 'emphasized',
-    bg: mode('white', 'gray.800')(props),
+    color: 'base',
+    colorScheme: 'base',
+    bg: mode('base.900', 'gray.800')(props),
     _hover: {
-      bg: 'whiteAlpha.200',
+      bg: 'base.800',
     },
     _checked: {
-      bg: mode('gray.100', 'gray.700')(props),
+      bg: 'base.700',
     },
     _active: {
-      bg: mode('gray.100', 'gray.700')(props),
+      bg: 'base.600',
     },
   }),
   ghost: (props: StyleFunctionProps) => ({

@@ -27,7 +27,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useAccount, useNetwork } from '@micro-stacks/react';
 import { fetchTransaction } from 'micro-stacks/api';
 
-import { usePolling, useStep } from '@common/hooks';
+import { useBlocks, usePolling, useStep } from '@common/hooks';
 import { Notification } from '@lib/components/Notification';
 import { VerticalStep } from '@lib/components/VerticalStep';
 import { useForm } from 'react-hook-form';
@@ -51,11 +51,15 @@ import { FiSend } from 'react-icons/fi';
 // Store
 import { Editor, loader, type Monaco } from '@monaco-editor/react';
 
-import { useAddProposal } from '@lib/common/mutations/proposals';
+import {
+  useAddProposal,
+  useSubmitProposal,
+} from '@lib/common/mutations/proposals';
 import { useGenerateName, useVotingExtension } from '@lib/common/queries';
 import { ProposeButton } from '@lib/widgets/ProposeButton';
 import { useStore as useCodeStore } from '@lib/store/CodeStore';
 import { ContractDeployButton } from '@lib/widgets/ContractDeployButton';
+import { useRouter } from 'next/navigation';
 
 const FADE_IN_VARIANTS = {
   hidden: { opacity: 0, x: 0, y: 0 },
@@ -101,6 +105,7 @@ const defineClarityLanguage = (monaco: Monaco) => {
 };
 
 const CreateProposal = () => {
+  const router = useRouter();
   const { network } = useNetwork();
   const { register, getValues } = useForm({
     defaultValues: {
@@ -113,13 +118,18 @@ const CreateProposal = () => {
     maxStep: 4,
     initialStep: 0,
   });
+  console.log({ currentStep });
   const { data: contractName } = useGenerateName();
   const toast = useToast();
   const { data: votingData } = useVotingExtension();
+
+  const { mutate: submitProposal } = useSubmitProposal();
   const [transaction, setTransaction] = useState({
     txId: '',
     isPending: false,
   });
+  const { currentBlockHeight } = useBlocks();
+
   const { stxAddress } = useAccount();
   const { mutate: createProposal } = useAddProposal();
 
@@ -136,6 +146,8 @@ const CreateProposal = () => {
       defineClarityLanguage(monaco);
     });
   }, []);
+  const startBlockHeight = currentBlockHeight + 144 + 10;
+  const endBlockHeight = startBlockHeight + 720;
 
   const onFinishInsert: any = async (data: any) => {
     setTransaction({ txId: data.txId, isPending: true });
@@ -157,6 +169,20 @@ const CreateProposal = () => {
     }
   };
 
+  const onFinishUpdate = async (data: any) => {
+    setTransaction({ txId: data.txId, isPending: true });
+    try {
+      submitProposal({
+        contractAddress: `${stxAddress}.${contractName}`,
+        startBlockHeight,
+        endBlockHeight,
+        submitted: true,
+      });
+    } catch (e: any) {
+      console.error({ e });
+    }
+  };
+
   async function fetchTransactionData(transactionId: string) {
     try {
       const transaction = await fetchTransaction({
@@ -166,13 +192,12 @@ const CreateProposal = () => {
         event_limit: 0,
       });
       if (transaction?.tx_status === 'success') {
-        setState({ isDeployed: true });
         setTransaction({
           txId: '',
           isPending: false,
         });
-
         onComplete(transaction);
+        setState({ isDeployed: true });
         setStep(currentStep + 1);
       }
     } catch (e: any) {
@@ -185,22 +210,22 @@ const CreateProposal = () => {
       toast({
         duration: 3500,
         isClosable: true,
-        position: 'bottom-right',
+        position: 'top-right',
         render: () => (
           <Notification>
             <Stack direction="row" p="4" spacing="3">
               <Stack spacing="2.5">
                 <Stack spacing="1">
                   <Text fontSize="md" color="light.900" fontWeight="medium">
-                    Contract Deployed!
+                    Transaction minted!
                   </Text>
                   <Text fontSize="sm" color="gray.900">
-                    Your contract was successfully deployed.
+                    Your transaction was successfully executed.
                   </Text>
                 </Stack>
                 <ButtonGroup variant="link" size="sm" spacing="2">
                   <Button
-                    color="red.900"
+                    color="secondary.900"
                     as="a"
                     target="_blank"
                     href={
@@ -467,136 +492,205 @@ const CreateProposal = () => {
   const ProposalReview = () => {
     console.log('component render ', contractName);
     return (
-      <motion.div
-        variants={FADE_IN_VARIANTS}
-        initial={FADE_IN_VARIANTS.hidden}
-        animate={FADE_IN_VARIANTS.enter}
-        exit={FADE_IN_VARIANTS.exit}
-        transition={{ duration: 0.5, type: 'linear' }}
+      <Stack
+        maxW="md"
+        spacing="8"
+        mx="auto"
+        direction={{ base: 'column', md: 'column' }}
+        justify="space-between"
+        align="center"
+        color="white"
       >
+        <Stack mb="5" align="center" spacing="3">
+          <Avatar
+            size={50}
+            name="MDP Transfer STX"
+            variant="bauhaus"
+            colors={['#50DDC3', '#624AF2', '#EB00FF', '#7301FA', '#25C2A0']}
+          />
+          <Text fontSize="2xl" fontWeight="semibold" color="light.900">
+            {`mdp-${contractName}`}
+          </Text>
+        </Stack>
         <Stack
-          maxW="md"
-          spacing="8"
-          mx="auto"
-          direction={{ base: 'column', md: 'column' }}
+          display="contents"
           justify="space-between"
           align="center"
-          color="white"
+          spacing="5"
         >
-          <Stack mb="5" align="center" spacing="3">
-            <Avatar
-              size={50}
-              name="MDP Transfer STX"
-              variant="bauhaus"
-              colors={['#50DDC3', '#624AF2', '#EB00FF', '#7301FA', '#25C2A0']}
-            />
-            <Text fontSize="2xl" fontWeight="semibold" color="light.900">
-              {`mdp-${contractName}`}
+          <Stack w="100%" spacing="1">
+            <Text
+              color="gray.900"
+              fontSize="md"
+              mb={{ base: '10px', md: '0px' }}
+            >
+              Title
+            </Text>
+            <Text fontSize="md" fontWeight="regular" color="light.900">
+              {title
+                ? title.length > 50
+                  ? truncate(title, 75, 0)
+                  : title
+                : ''}
             </Text>
           </Stack>
-          <Stack
-            display="contents"
-            justify="space-between"
-            align="center"
-            spacing="5"
-          >
-            <Stack w="100%" spacing="1">
-              <Text
-                color="gray.900"
-                fontSize="md"
-                mb={{ base: '10px', md: '0px' }}
-              >
-                Title
-              </Text>
-              <Text fontSize="md" fontWeight="regular" color="light.900">
-                {title && truncate(title, 75, 0)}
-              </Text>
-            </Stack>
 
-            <Stack w="100%" spacing="1">
-              <Text
-                color="gray.900"
-                fontSize="md"
-                mb={{ base: '10px', md: '0px' }}
-              >
-                Details
-              </Text>
-              <Text fontSize="md" fontWeight="regular" color="light.900">
-                {description && truncate(description, 75, 0)}
-              </Text>
-            </Stack>
+          <Stack w="100%" spacing="1">
+            <Text
+              color="gray.900"
+              fontSize="md"
+              mb={{ base: '10px', md: '0px' }}
+            >
+              Details
+            </Text>
+            <Text fontSize="md" fontWeight="regular" color="light.900">
+              {description
+                ? description.length > 75
+                  ? truncate(description, 75, 0)
+                  : description
+                : ''}
+            </Text>
           </Stack>
         </Stack>
-      </motion.div>
+      </Stack>
     );
   };
 
   const ProposalSubmission = () => {
     return (
-      isDeployed && (
-        <Stack
-          maxW="md"
-          spacing="8"
-          mx="auto"
-          direction={{ base: 'column', md: 'column' }}
-          justify="space-between"
-          align="center"
-          color="white"
-        >
-          <Confetti
-            height={1200}
-            width={1280}
-            recycle={false}
-            numberOfPieces={250}
-            gravity={0.15}
+      <Stack
+        maxW="md"
+        spacing="8"
+        mx="auto"
+        direction={{ base: 'column', md: 'column' }}
+        justify="space-between"
+        align="center"
+        color="white"
+      >
+        <Stack mb="5" align="center" spacing="3">
+          <Avatar
+            size={50}
+            name="Proposals"
+            variant="bauhaus"
             colors={['#50DDC3', '#624AF2', '#EB00FF', '#7301FA', '#25C2A0']}
           />
-          <Stack mb="5" align="center" spacing="3">
-            <Avatar
-              size={50}
-              name="Proposals"
-              variant="bauhaus"
-              colors={['#50DDC3', '#624AF2', '#EB00FF', '#7301FA', '#25C2A0']}
-            />
-            <Text fontSize="2xl" fontWeight="semibold" color="light.900">
-              {`mdp-${contractName}`}
+          <Text fontSize="2xl" fontWeight="semibold" color="light.900">
+            {`mdp-${contractName}`}
+          </Text>
+          <HStack justify="center" my="3">
+            <Badge
+              variant="subtle"
+              bg="base.800"
+              color="secondary.900"
+              px="3"
+              py="2"
+            >
+              <HStack spacing="2">
+                <Icon color="secondary.900" as={FaCheckCircle} />
+                <Text>Deployed</Text>
+              </HStack>
+            </Badge>
+          </HStack>
+        </Stack>
+        <Stack
+          display="contents"
+          justify="space-between"
+          align="center"
+          spacing="5"
+        >
+          <Stack w="100%" spacing="1">
+            <Text
+              color="gray.900"
+              fontSize="md"
+              mb={{ base: '10px', md: '0px' }}
+            >
+              Details
             </Text>
-            <HStack justify="center" my="3">
-              <Badge
-                variant="subtle"
-                bg="base.800"
-                color="secondary.900"
-                px="3"
-                py="2"
-              >
-                <HStack spacing="2">
-                  <Icon color="secondary.900" as={FaCheckCircle} />
-                  <Text>Deployed</Text>
-                </HStack>
-              </Badge>
-            </HStack>
-          </Stack>
-          <Stack
-            display="contents"
-            justify="space-between"
-            align="center"
-            spacing="5"
-          >
-            <Stack w="100%" spacing="1">
-              <Text
-                color="gray.900"
-                fontSize="md"
-                mb={{ base: '10px', md: '0px' }}
-              >
-                Details
-              </Text>
-              <Text fontSize="md" fontWeight="regular" color="light.900">
-                {description && truncate(description, 75, 0)}
-              </Text>
-            </Stack>
+            <Text fontSize="md" fontWeight="regular" color="light.900">
+              {description
+                ? description.length > 75
+                  ? truncate(description, 75, 0)
+                  : description
+                : ''}
+            </Text>
           </Stack>
         </Stack>
-      )
+      </Stack>
+    );
+  };
+
+  const ProposalSubmitted = () => {
+    return (
+      <Stack
+        maxW="md"
+        spacing="8"
+        mx="auto"
+        direction={{ base: 'column', md: 'column' }}
+        justify="space-between"
+        align="center"
+        color="white"
+      >
+        <Stack mb="5" align="center" spacing="3">
+          <Avatar
+            size={50}
+            name="Proposals"
+            variant="bauhaus"
+            colors={['#50DDC3', '#624AF2', '#EB00FF', '#7301FA', '#25C2A0']}
+          />
+          <Text fontSize="2xl" fontWeight="semibold" color="light.900">
+            {`mdp-${contractName}`}
+          </Text>
+          <HStack justify="center" my="3">
+            <Badge
+              variant="subtle"
+              bg="base.800"
+              color="secondary.900"
+              px="3"
+              py="2"
+            >
+              <HStack spacing="2">
+                <Icon color="secondary.900" as={FaCheckCircle} />
+                <Text>Submitted</Text>
+              </HStack>
+            </Badge>
+          </HStack>
+        </Stack>
+        <Stack
+          display="contents"
+          justify="space-between"
+          align="center"
+          spacing="5"
+        >
+          <Stack w="100%" spacing="1">
+            <Text
+              color="gray.900"
+              fontSize="md"
+              mb={{ base: '10px', md: '0px' }}
+            >
+              Details
+            </Text>
+            <Text fontSize="md" fontWeight="regular" color="light.900">
+              {description
+                ? description.length > 75
+                  ? truncate(description, 75, 0)
+                  : description
+                : ''}
+            </Text>
+          </Stack>
+          <Stack w="100%" spacing="1">
+            <Button
+              onClick={() => router.push('/proposals')}
+              color={'white'}
+              bg="secondary.900"
+              colorScheme="base"
+              fontSize="md"
+              mb={{ base: '10px', md: '0px' }}
+            >
+              Check out all the proposals
+            </Button>
+          </Stack>
+        </Stack>
+      </Stack>
     );
   };
 
@@ -610,6 +704,8 @@ const CreateProposal = () => {
         return <ProposalReview />;
       case 3:
         return <ProposalSubmission />;
+      case 4:
+        return <ProposalSubmitted />;
 
       default:
         return <></>;
@@ -678,6 +774,17 @@ const CreateProposal = () => {
           py={{ base: '15', md: '20' }}
         >
           <Container>
+            {isDeployed && (
+              <Confetti
+                height={1200}
+                width={1280}
+                recycle={false}
+                numberOfPieces={250}
+                gravity={0.15}
+                colors={['#50DDC3', '#624AF2', '#EB00FF', '#7301FA', '#25C2A0']}
+              />
+            )}
+
             <form>
               <FormControl>
                 <ViewStep />
@@ -688,7 +795,7 @@ const CreateProposal = () => {
                 bottom={'20'}
                 right={'20'}
               >
-                {currentStep > 0 && (
+                {currentStep > 0 && !isDeployed && (
                   <Button
                     color="white"
                     variant="outline"
@@ -702,26 +809,40 @@ const CreateProposal = () => {
                     Previous
                   </Button>
                 )}
-                {isDeployed ? (
+                {currentStep > 3 && <></>}
+                {currentStep === 3 && (
                   <ProposeButton
-                    label={<p>propose</p>}
+                    label={
+                      transaction.isPending ? (
+                        <Flex gap={3} align={'center'}>
+                          <Spinner size="sm" />
+                          submitting
+                        </Flex>
+                      ) : (
+                        <Text>Propose</Text>
+                      )
+                    }
                     proposalAddress={`mdp-${contractName}`}
                     bg="secondary.900"
                     fontSize="md"
                     size="md"
                     _hover={{ opacity: 0.9 }}
                     _active={{ opacity: 1 }}
+                    onFinish={onFinishUpdate}
+                    startBlockHeight={startBlockHeight}
                   />
-                ) : currentStep === 2 ? (
+                )}{' '}
+                {currentStep === 2 && (
                   <ContractDeployButton
                     color="white"
                     bg="secondary.900"
+                    colorScheme="base"
                     w={'15vw'}
                     label={
                       transaction.isPending ? (
                         <Flex gap={3} align={'center'}>
-                          <Spinner size={'md'} />
-                          Deploying...
+                          <Spinner size="sm" />
+                          Deploying
                         </Flex>
                       ) : (
                         <Text>Deploy Contract</Text>
@@ -732,7 +853,8 @@ const CreateProposal = () => {
                     contractName={`mdp-${contractName}`}
                     description={description}
                   ></ContractDeployButton>
-                ) : (
+                )}
+                {(currentStep === 0 || currentStep === 1) && (
                   <Button
                     rightIcon={<FaAngleRight />}
                     w={'15vw'}

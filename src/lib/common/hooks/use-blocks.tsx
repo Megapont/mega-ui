@@ -34,7 +34,8 @@ export function useBlocks() {
 
   useEffect(() => {
     getBlocks();
-  }, [getBlocks]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return { blocks: state.blocks, currentBlockHeight: state.currentBlockHeight };
 }

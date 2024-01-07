@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
   Box,
   ButtonGroup,
@@ -11,16 +11,18 @@ import {
   Stack,
   SimpleGrid,
   Text,
+  useToast,
+  CloseButton,
 } from '@chakra-ui/react';
 
 // Components
-
+import { Notification } from '@lib/components/Notification';
 import { EmptyState } from '@lib/components/EmptyState';
 import { ProposalCard } from '@lib/components/cards';
 import { Wrapper } from '@lib/components/Wrapper';
 
 // Queries
-import { useProposals } from '@common/queries';
+import { useAuth, useProposals } from '@common/queries';
 
 //  Animation
 import { motion } from 'framer-motion';
@@ -28,9 +30,10 @@ import { FADE_IN_VARIANTS } from '@utils/animation';
 import { SectionHeader } from '@lib/components/SectionHeader';
 
 // Icons
-import { FaArrowRight, FaEllipsisH } from 'react-icons/fa';
+import { FaArrowRight, FaEllipsisH, FaPlusCircle } from 'react-icons/fa';
 import { Header } from '@lib/components/Header';
 import { AppLayout } from '@lib/layout/AppLayout';
+import { useRouter } from 'next/navigation';
 
 const MotionGrid = motion(SimpleGrid);
 const MotionProposalCard = motion(ProposalCard);
@@ -38,6 +41,40 @@ const MotionProposalCard = motion(ProposalCard);
 const Proposals = () => {
   const [filter, setFilter] = useState('all');
   const { data: proposals } = useProposals(filter);
+  const router = useRouter();
+  const toast = useToast();
+  const { proposeData, isLoading } = useAuth();
+
+  const cannotPropose = useCallback(() => {
+    toast({
+      duration: 3500,
+      isClosable: true,
+      position: 'bottom-right',
+      render: () => (
+        <Notification>
+          <Stack direction="row" p="4" spacing="3">
+            <Stack spacing="2.5">
+              <Stack spacing="1">
+                <Text fontSize="md" color="light.900" fontWeight="medium">
+                  You cannot propose
+                </Text>
+                <Text fontSize="sm" color="gray.900">
+                  You dont have enough MEGA token balance to initiate a
+                  proposal.
+                </Text>
+              </Stack>
+            </Stack>
+            <CloseButton
+              aria-label="close"
+              transform="translateY(-6px)"
+              color="white"
+              onClick={() => toast.closeAll()}
+            />
+          </Stack>
+        </Notification>
+      ),
+    });
+  }, [toast]);
 
   return (
     <AppLayout>
@@ -62,6 +99,17 @@ const Proposals = () => {
                     <Text fontSize="lg" fontWeight="medium">
                       Proposals
                     </Text>
+                    {!isLoading && (
+                      <FaPlusCircle
+                        onClick={() => {
+                          if (!proposeData?.canPropose) {
+                            cannotPropose();
+                            return;
+                          }
+                          router.push('/proposals/create');
+                        }}
+                      ></FaPlusCircle>
+                    )}
                   </HStack>
                   <Text color="gray.900" fontSize="sm">
                     View the latest proposals.
@@ -78,9 +126,9 @@ const Proposals = () => {
                           value="all"
                           _focus={{ outline: 'none' }}
                           _checked={{
-                            bg: 'secondary.900',
+                            bg: 'red.900',
                             color: 'white',
-                            borderColor: 'base.500',
+                            borderColor: 'red.600',
                           }}
                         >
                           All
@@ -92,9 +140,9 @@ const Proposals = () => {
                           value="inactive"
                           _focus={{ outline: 'none' }}
                           _checked={{
-                            bg: 'secondary.900',
+                            bg: 'red.900',
                             color: 'white',
-                            borderColor: 'base.500',
+                            borderColor: 'red.600',
                           }}
                         >
                           Inactive
@@ -106,9 +154,9 @@ const Proposals = () => {
                           value="active"
                           _focus={{ outline: 'none' }}
                           _checked={{
-                            bg: 'secondary.900',
+                            bg: 'red.900',
                             color: 'white',
-                            borderColor: 'base.500',
+                            borderColor: 'red.600',
                           }}
                         >
                           Active
@@ -120,9 +168,9 @@ const Proposals = () => {
                           value="executed"
                           _focus={{ outline: 'none' }}
                           _checked={{
-                            bg: 'secondary.900',
+                            bg: 'red.900',
                             color: 'white',
-                            borderColor: 'base.500',
+                            borderColor: 'red.600',
                           }}
                         >
                           Executed
@@ -167,6 +215,11 @@ const Proposals = () => {
                     <Text fontSize="lg" fontWeight="medium">
                       Proposals
                     </Text>
+                    {!isLoading && (
+                      <FaPlusCircle
+                        onClick={() => router.push('/proposals/create')}
+                      ></FaPlusCircle>
+                    )}
                   </HStack>
                   <Text color="gray.900" fontSize="sm">
                     View the latest proposals.
@@ -183,9 +236,9 @@ const Proposals = () => {
                           value="all"
                           _focus={{ outline: 'none' }}
                           _checked={{
-                            bg: 'red.600',
+                            bg: 'red.900',
                             color: 'white',
-                            borderColor: 'red.900',
+                            borderColor: 'red.600',
                           }}
                         >
                           All
@@ -197,9 +250,9 @@ const Proposals = () => {
                           value="inactive"
                           _focus={{ outline: 'none' }}
                           _checked={{
-                            bg: 'red.600',
+                            bg: 'red.900',
                             color: 'white',
-                            borderColor: 'red.900',
+                            borderColor: 'red.600',
                           }}
                         >
                           Inactive
@@ -211,9 +264,9 @@ const Proposals = () => {
                           value="active"
                           _focus={{ outline: 'none' }}
                           _checked={{
-                            bg: 'red.600',
+                            bg: 'red.900',
                             color: 'white',
-                            borderColor: 'red.900',
+                            borderColor: 'red.600',
                           }}
                         >
                           Active
@@ -225,9 +278,9 @@ const Proposals = () => {
                           value="executed"
                           _focus={{ outline: 'none' }}
                           _checked={{
-                            bg: 'red.600',
+                            bg: 'red.900',
                             color: 'white',
-                            borderColor: 'red.900',
+                            borderColor: 'red.600',
                           }}
                         >
                           Executed

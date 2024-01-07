@@ -29,9 +29,7 @@ export const VerticalStep = (props: StepProps) => {
         <Divider
           orientation="vertical"
           borderWidth="1px"
-          borderColor={
-            isCompleted ? 'base.500' : isLastStep ? 'transparent' : 'base.500'
-          }
+          borderColor={isLastStep ? 'transparent' : 'base.500'}
         />
       </Stack>
       <Stack spacing="2" pb={isLastStep ? '0' : isCompleted ? '3' : '8'}>

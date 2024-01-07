@@ -11,15 +11,15 @@ export const StepCircle = (props: RadioCircleProps) => {
   return (
     <Circle
       size="5"
-      bg={isCompleted ? 'red.900' : 'inherit'}
+      bg={isCompleted ? 'green' : 'inherit'}
       borderWidth={isCompleted ? '0' : '2px'}
-      borderColor={isActive ? 'red.900' : 'base.500'}
+      borderColor={isActive ? 'green' : 'base.500'}
       {...props}
     >
       {isCompleted ? (
         <Icon as={HiCheck} color="inverted" boxSize="4" />
       ) : (
-        <Circle bg={isActive ? 'base.800' : 'border'} size="4" />
+        <Circle bg={isActive ? 'base.800' : 'base.800'} size="4" />
       )}
     </Circle>
   );

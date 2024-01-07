@@ -91,7 +91,6 @@ export default function Index() {
                       <Button
                         marginTop={10}
                         variant="outline"
-                        bgColor={'transparent'}
                         textColor={'white'}
                         colorScheme="base"
                         borderRadius="50px"
