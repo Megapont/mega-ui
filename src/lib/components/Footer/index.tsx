@@ -5,7 +5,7 @@
 import { Box, Flex, IconButton, Text } from '@chakra-ui/react';
 import { FaDiscord, FaMedium, FaTwitter } from 'react-icons/fa';
 
-export const AppFooter = () => {
+export const LandingFooter = () => {
   const year = new Date().getFullYear();
   return (
     <Box as="section" height="5vh">

@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 import { Wrapper } from '@lib/components/Wrapper';
 import { useRouter } from 'next/navigation';
 import { FaAngleRight } from 'react-icons/fa';
-import { AppFooter } from '@lib/components/Footer';
+import { LandingFooter } from '@lib/components/Footer';
 
 const SLIDE_UP_VARIANTS = {
   hidden: { opacity: 0, x: 0, y: 15 },
@@ -110,7 +110,7 @@ export default function Index() {
           </Wrapper>
         </Box>
       </motion.div>
-      <AppFooter />
+      <LandingFooter />
     </>
   );
 }

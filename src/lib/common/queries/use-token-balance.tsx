@@ -1,12 +1,12 @@
 // Hook (use-governance-token.tsx)
 import { useQuery } from 'react-query';
-import { useExtension } from '@common/queries';
 import { useCurrentStxAddress } from '@micro-stacks/react';
 import { getTokenBalance } from '@common/api';
+import { MEGA_GOVERNANCE_CONTRACT } from '../constants';
 
 export function useTokenBalance() {
   const currentStxAddress: any = useCurrentStxAddress();
-  const { extension: governanceToken } = useExtension('Governance Token');
+  const governanceToken = { contractAddress: MEGA_GOVERNANCE_CONTRACT };
 
   const {
     isFetching,

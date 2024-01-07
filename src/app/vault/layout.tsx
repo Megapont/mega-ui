@@ -1,5 +1,6 @@
 'use client';
 
+import { AppFooter } from '@lib/components/AppFooter';
 import { Header } from '@lib/components/Header';
 import { AppLayout } from '@lib/layout/AppLayout';
 
@@ -12,6 +13,7 @@ const Layout = ({ children }: RootLayoutProps) => {
     <AppLayout>
       <Header></Header>
       {children}
+      <AppFooter></AppFooter>
     </AppLayout>
   );
 };

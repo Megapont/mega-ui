@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+
 import { Badge, HStack, Icon, Stack, Text } from '@chakra-ui/react';
 
 // Hooks
@@ -36,8 +36,7 @@ export const ProposalCard = ({
 }: any) => {
   const [isHovered, setHovered] = useState(false);
   const { currentBlockHeight } = useBlocks();
-  const router = useRouter();
-  const { dao } = router.query as any;
+
   const isClosed = currentBlockHeight > endBlockHeight;
   const isOpen =
     currentBlockHeight <= endBlockHeight &&
@@ -83,75 +82,69 @@ export const ProposalCard = ({
         scale: 1,
       }}
     >
-      <Link href={`/d/${dao}/proposals/${contractAddress}`}>
-        <a>
-          <Card
-            bg="base.900"
-            minH="auto"
-            position="relative"
-            px={{ base: '6', md: '6' }}
-            py={{ base: '6', md: '6' }}
-            justifyContent="center"
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
-            _hover={{
-              cursor: 'pointer',
-            }}
-          >
-            <Stack direction="row" minH="15vh" justify="center">
-              <Stack
-                spacing="4"
-                direction={{
-                  base: 'row',
-                  md: 'column',
-                }}
-                justify="space-between"
-                color="white"
-              >
-                <HStack justify="space-between">
-                  {statusBadge}
-                  {isHovered && (
-                    <motion.div
-                      variants={FADE_IN_VARIANTS}
-                      initial={FADE_IN_VARIANTS.hidden}
-                      animate={FADE_IN_VARIANTS.enter}
-                      exit={FADE_IN_VARIANTS.exit}
-                      transition={{ duration: 0.5, type: 'linear' }}
-                    >
-                      <Icon as={FiArrowUpRight} boxSize="5" color="light.900" />
-                    </motion.div>
-                  )}
-                </HStack>
-                <Stack>
-                  <HStack spacing="3" justify="space-between">
-                    <Stack direction="column" spacing="3">
-                      <HStack align="center" spacing="2">
-                        <Avatar
-                          size={15}
-                          name={type}
-                          variant="bauhaus"
-                          colors={[
-                            '#50DDC3',
-                            '#624AF2',
-                            '#EB00FF',
-                            '#7301FA',
-                            '#25C2A0',
-                          ]}
-                        />
-                        <Text
-                          fontWeight="medium"
-                          fontSize="lg"
-                          lineHeight="1.15"
-                        >
-                          {title} {type}
-                        </Text>
-                      </HStack>
-                      <Text fontWeight="regular" fontSize="sm" color="gray.900">
-                        {description && truncate(description, 50)}
+      <Link href={`/proposals/${contractAddress}`}>
+        <Card
+          bg="base.900"
+          minH="auto"
+          position="relative"
+          px={{ base: '6', md: '6' }}
+          py={{ base: '6', md: '6' }}
+          justifyContent="center"
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+          _hover={{
+            cursor: 'pointer',
+          }}
+        >
+          <Stack direction="row" minH="15vh" justify="center">
+            <Stack
+              spacing="4"
+              direction={{
+                base: 'row',
+                md: 'column',
+              }}
+              justify="space-between"
+              color="white"
+            >
+              <HStack justify="space-between">
+                {statusBadge}
+                {isHovered && (
+                  <motion.div
+                    variants={FADE_IN_VARIANTS}
+                    initial={FADE_IN_VARIANTS.hidden}
+                    animate={FADE_IN_VARIANTS.enter}
+                    exit={FADE_IN_VARIANTS.exit}
+                    transition={{ duration: 0.5, type: 'linear' }}
+                  >
+                    <Icon as={FiArrowUpRight} boxSize="5" color="light.900" />
+                  </motion.div>
+                )}
+              </HStack>
+              <Stack>
+                <HStack spacing="3" justify="space-between">
+                  <Stack direction="column" spacing="3">
+                    <HStack align="center" spacing="2">
+                      <Avatar
+                        size={15}
+                        variant="bauhaus"
+                        colors={[
+                          '#50DDC3',
+                          '#624AF2',
+                          '#EB00FF',
+                          '#7301FA',
+                          '#25C2A0',
+                        ]}
+                      />
+                      <Text fontWeight="medium" fontSize="lg" lineHeight="1.15">
+                        {title} {type}
                       </Text>
-                    </Stack>
-                  </HStack>
-                  {/* <Stack direction='column' spacing='3'>
+                    </HStack>
+                    <Text fontWeight="regular" fontSize="sm" color="gray.900">
+                      {description && truncate(description, 50)}
+                    </Text>
+                  </Stack>
+                </HStack>
+                {/* <Stack direction='column' spacing='3'>
                     <Stack spacing='3' mt='2'>
                       <Text
                         color='gray.900'
@@ -183,11 +176,10 @@ export const ProposalCard = ({
                       />
                     </Stack>
                   </Stack> */}
-                </Stack>
               </Stack>
             </Stack>
-          </Card>
-        </a>
+          </Stack>
+        </Card>
       </Link>
     </motion.div>
   );

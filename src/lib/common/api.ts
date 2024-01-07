@@ -1,5 +1,5 @@
 import { supabase } from '@utils/supabase';
-import { stacksNetwork } from '@common/constants';
+import { devnet, stacksNetwork } from '@common/constants';
 import {
   fetchContractSource,
   fetchContractEventsById,
@@ -17,21 +17,6 @@ import {
 } from 'micro-stacks/clarity';
 import { defaultTo } from 'lodash';
 import { pluckSourceCode } from './helpers';
-
-export async function getDAO(name: string) {
-  try {
-    const { data, error } = await supabase
-      .from('Organizations')
-      .select(
-        'id, name, slug, contractAddress, prefix, Extensions (contractAddress, ExtensionTypes (name))'
-      )
-      .eq('slug', name);
-    if (error) throw error;
-    return data[0];
-  } catch (e: any) {
-    console.error({ e });
-  }
-}
 
 export async function generateContractName() {
   try {
@@ -75,9 +60,9 @@ export async function getExtension(name: string) {
 export async function getDBProposals(organizationId: string, filter: string) {
   const query = supabase
     .from('Proposals')
-    .select('*, Organizations!inner(id, name)')
-    .order('createdAt', { ascending: false })
-    .eq('Organizations.id', organizationId);
+    .select('*')
+    .order('created_at', { ascending: false });
+
   try {
     if (filter === 'inactive') {
       const { data: Proposals, error } = await query.filter(
@@ -147,9 +132,12 @@ export async function getContractProposalByTx(transactionId: string) {
 
 export async function getTokenMetadata(contractId: string) {
   try {
+    const url = devnet
+      ? `http://localhost:3999/extended/v1/tokens/${contractId}/ft/metadata`
+      : `https://api.hiro.so/metadata/v1/ft/${contractId}`;
     //const network = new stacksNetwork();
     const tokenMetadata = await fetch(`
-    https://api.hiro.so/metadata/v1/ft/${contractId}`);
+    ${url}`);
     const result = tokenMetadata.json();
 
     return result;
@@ -394,7 +382,7 @@ export async function getContractsToDeploy(currentStxAddress: string) {
     const { data, error } = await supabase
       .from('Proposals')
       .select(
-        'id, contractAddress, type, transactionId, submitted, disabled, proposer, Organizations!inner(id, name, prefix)'
+        'id, contractAddress, type, transactionId, submitted, disabled, proposer'
       )
       .eq('proposer', currentStxAddress)
       .eq('submitted', false)

@@ -6,6 +6,7 @@ export const usePolling = (
   isPolling: boolean | null,
   wait = 7500
 ) => {
+  console.log('usePolling', { callback, isPolling, wait });
   const savedCallback = useRef<HTMLDivElement | any>(null);
 
   useEffect(() => {

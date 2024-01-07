@@ -6,7 +6,8 @@
       "@*": ["./*"],
       "@common/*": ["lib/common/*"],
       "@utils/*": ["lib/utils/*"],
-      "@store/*": ["lib/store/*"]
+      "@store/*": ["lib/store/*"],
+      "@widgets/*": ["lib/widgets/*"]
     }
   }
 }
