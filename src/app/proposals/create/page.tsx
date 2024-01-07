@@ -44,6 +44,7 @@ import {
   FaPaperclip,
   FaAngleLeft,
   FaAngleRight,
+  FaFileUpload,
 } from 'react-icons/fa';
 import { FiSend } from 'react-icons/fi';
 
@@ -52,7 +53,7 @@ import { Editor, loader, type Monaco } from '@monaco-editor/react';
 
 import { useAddProposal } from '@lib/common/mutations/proposals';
 import { useGenerateName, useVotingExtension } from '@lib/common/queries';
-import { ProposeButton } from '@lib/components/Actions/ProposeButton';
+import { ProposeButton } from '@lib/widgets/ProposeButton';
 import { useStore as useCodeStore } from '@lib/store/CodeStore';
 import { ContractDeployButton } from '@lib/widgets/ContractDeployButton';
 
@@ -109,7 +110,7 @@ const CreateProposal = () => {
   });
   const { title, description } = getValues();
   const [currentStep, { setStep }] = useStep({
-    maxStep: 3,
+    maxStep: 4,
     initialStep: 0,
   });
   const { data: contractName } = useGenerateName();
@@ -172,6 +173,7 @@ const CreateProposal = () => {
         });
 
         onComplete(transaction);
+        setStep(currentStep + 1);
       }
     } catch (e: any) {
       console.error({ e });
@@ -284,7 +286,47 @@ const CreateProposal = () => {
 
     {
       title: 'Review & Submit ',
-      description: null,
+      description:
+        currentStep <= 2 ? (
+          <></>
+        ) : (
+          <motion.div
+            variants={FADE_IN_VARIANTS}
+            initial={FADE_IN_VARIANTS.hidden}
+            animate={FADE_IN_VARIANTS.enter}
+            exit={FADE_IN_VARIANTS.exit}
+            transition={{ duration: 0.5, type: 'linear' }}
+          >
+            <HStack>
+              <FaFileUpload fontSize="0.9rem" />
+              <Text fontSize="md" fontWeight="medium" color="light.900">
+                Proposal contract deployed
+              </Text>
+            </HStack>
+          </motion.div>
+        ),
+    },
+    {
+      title: 'Proposal submission',
+      description:
+        currentStep <= 3 ? (
+          <></>
+        ) : (
+          <motion.div
+            variants={FADE_IN_VARIANTS}
+            initial={FADE_IN_VARIANTS.hidden}
+            animate={FADE_IN_VARIANTS.enter}
+            exit={FADE_IN_VARIANTS.exit}
+            transition={{ duration: 0.5, type: 'linear' }}
+          >
+            <HStack>
+              <FaCheckCircle fontSize="0.9rem" />
+              <Text fontSize="md" fontWeight="medium" color="light.900">
+                Proposal contract submitted
+              </Text>
+            </HStack>
+          </motion.div>
+        ),
     },
   ];
 
@@ -489,6 +531,75 @@ const CreateProposal = () => {
     );
   };
 
+  const ProposalSubmission = () => {
+    return (
+      isDeployed && (
+        <Stack
+          maxW="md"
+          spacing="8"
+          mx="auto"
+          direction={{ base: 'column', md: 'column' }}
+          justify="space-between"
+          align="center"
+          color="white"
+        >
+          <Confetti
+            height={1200}
+            width={1280}
+            recycle={false}
+            numberOfPieces={250}
+            gravity={0.15}
+            colors={['#50DDC3', '#624AF2', '#EB00FF', '#7301FA', '#25C2A0']}
+          />
+          <Stack mb="5" align="center" spacing="3">
+            <Avatar
+              size={50}
+              name="Proposals"
+              variant="bauhaus"
+              colors={['#50DDC3', '#624AF2', '#EB00FF', '#7301FA', '#25C2A0']}
+            />
+            <Text fontSize="2xl" fontWeight="semibold" color="light.900">
+              {`mdp-${contractName}`}
+            </Text>
+            <HStack justify="center" my="3">
+              <Badge
+                variant="subtle"
+                bg="base.800"
+                color="secondary.900"
+                px="3"
+                py="2"
+              >
+                <HStack spacing="2">
+                  <Icon color="secondary.900" as={FaCheckCircle} />
+                  <Text>Deployed</Text>
+                </HStack>
+              </Badge>
+            </HStack>
+          </Stack>
+          <Stack
+            display="contents"
+            justify="space-between"
+            align="center"
+            spacing="5"
+          >
+            <Stack w="100%" spacing="1">
+              <Text
+                color="gray.900"
+                fontSize="md"
+                mb={{ base: '10px', md: '0px' }}
+              >
+                Details
+              </Text>
+              <Text fontSize="md" fontWeight="regular" color="light.900">
+                {description && truncate(description, 75, 0)}
+              </Text>
+            </Stack>
+          </Stack>
+        </Stack>
+      )
+    );
+  };
+
   const ViewStep = () => {
     switch (currentStep) {
       case 0:
@@ -497,6 +608,8 @@ const CreateProposal = () => {
         return <ProposalDetails />;
       case 2:
         return <ProposalReview />;
+      case 3:
+        return <ProposalSubmission />;
 
       default:
         return <></>;
@@ -565,155 +678,76 @@ const CreateProposal = () => {
           py={{ base: '15', md: '20' }}
         >
           <Container>
-            {isDeployed ? (
-              <Stack
-                maxW="md"
-                spacing="8"
-                mx="auto"
-                direction={{ base: 'column', md: 'column' }}
-                justify="space-between"
-                align="center"
-                color="white"
+            <form>
+              <FormControl>
+                <ViewStep />
+              </FormControl>
+              <HStack
+                justify="end"
+                position={'fixed'}
+                bottom={'20'}
+                right={'20'}
               >
-                <Confetti
-                  height={1200}
-                  width={1280}
-                  recycle={false}
-                  numberOfPieces={250}
-                  gravity={0.15}
-                  colors={[
-                    '#50DDC3',
-                    '#624AF2',
-                    '#EB00FF',
-                    '#7301FA',
-                    '#25C2A0',
-                  ]}
-                />
-                <Stack mb="5" align="center" spacing="3">
-                  <Avatar
-                    size={50}
-                    name="Proposals"
-                    variant="bauhaus"
-                    colors={[
-                      '#50DDC3',
-                      '#624AF2',
-                      '#EB00FF',
-                      '#7301FA',
-                      '#25C2A0',
-                    ]}
-                  />
-                  <Text fontSize="2xl" fontWeight="semibold" color="light.900">
-                    {`mdp-${contractName}`}
-                  </Text>
-                  <HStack justify="center" my="3">
-                    <Badge
-                      variant="subtle"
-                      bg="base.800"
-                      color="secondary.900"
-                      px="3"
-                      py="2"
-                    >
-                      <HStack spacing="2">
-                        <Icon color="secondary.900" as={FaCheckCircle} />
-                        <Text>Deployed</Text>
-                      </HStack>
-                    </Badge>
-                  </HStack>
-                </Stack>
-                <Stack
-                  display="contents"
-                  justify="space-between"
-                  align="center"
-                  spacing="5"
-                >
-                  <Stack w="100%" spacing="1">
-                    <Text
-                      color="gray.900"
-                      fontSize="md"
-                      mb={{ base: '10px', md: '0px' }}
-                    >
-                      Details
-                    </Text>
-                    <Text fontSize="md" fontWeight="regular" color="light.900">
-                      {description && truncate(description, 75, 0)}
-                    </Text>
-                  </Stack>
-                </Stack>
-                <HStack width="full" justify="space-between">
+                {currentStep > 0 && (
+                  <Button
+                    color="white"
+                    variant="outline"
+                    bg={'transparent'}
+                    w={'15vw'}
+                    leftIcon={<FaAngleLeft />}
+                    _hover={{ opacity: 0.9 }}
+                    _active={{ opacity: 1 }}
+                    onClick={() => setStep(currentStep - 1)}
+                  >
+                    Previous
+                  </Button>
+                )}
+                {isDeployed ? (
                   <ProposeButton
-                    proposalContractAddress={`mdp-${contractName}`}
-                    isFullWidth
+                    label={<p>propose</p>}
+                    proposalAddress={`mdp-${contractName}`}
                     bg="secondary.900"
                     fontSize="md"
                     size="md"
                     _hover={{ opacity: 0.9 }}
                     _active={{ opacity: 1 }}
                   />
-                </HStack>
-              </Stack>
-            ) : (
-              <form>
-                <FormControl>
-                  <ViewStep />
-                </FormControl>
-                <HStack
-                  justify="end"
-                  position={'fixed'}
-                  bottom={'20'}
-                  right={'20'}
-                >
-                  {currentStep > 0 && (
-                    <Button
-                      color="white"
-                      variant="outline"
-                      bg={'transparent'}
-                      w={'15vw'}
-                      leftIcon={<FaAngleLeft />}
-                      _hover={{ opacity: 0.9 }}
-                      _active={{ opacity: 1 }}
-                      onClick={() => setStep(currentStep - 1)}
-                    >
-                      Previous
-                    </Button>
-                  )}
-
-                  {currentStep === 2 ? (
-                    <ContractDeployButton
-                      color="white"
-                      bg="secondary.900"
-                      w={'15vw'}
-                      label={
-                        transaction.isPending ? (
-                          <Flex gap={3} align={'center'}>
-                            <Spinner size={'md'} />
-                            Deploying...
-                          </Flex>
-                        ) : (
-                          <Text>Deploy Contract</Text>
-                        )
-                      }
-                      disabled={transaction.isPending}
-                      onFinish={onFinishInsert}
-                      contractName={`mdp-${contractName}`}
-                      description={description}
-                    ></ContractDeployButton>
-                  ) : (
-                    <Button
-                      rightIcon={<FaAngleRight />}
-                      w={'15vw'}
-                      color="white"
-                      variant="outline"
-                      bg={'transparent'}
-                      onClick={() => setStep(currentStep + 1)}
-                      _hover={{ opacity: 0.9 }}
-                      _active={{ opacity: 1 }}
-                    >
-                      Next
-                    </Button>
-                  )}
-                </HStack>
-              </form>
-            )}
+                ) : currentStep === 2 ? (
+                  <ContractDeployButton
+                    color="white"
+                    bg="secondary.900"
+                    w={'15vw'}
+                    label={
+                      transaction.isPending ? (
+                        <Flex gap={3} align={'center'}>
+                          <Spinner size={'md'} />
+                          Deploying...
+                        </Flex>
+                      ) : (
+                        <Text>Deploy Contract</Text>
+                      )
+                    }
+                    disabled={transaction.isPending}
+                    onFinish={onFinishInsert}
+                    contractName={`mdp-${contractName}`}
+                    description={description}
+                  ></ContractDeployButton>
+                ) : (
+                  <Button
+                    rightIcon={<FaAngleRight />}
+                    w={'15vw'}
+                    color="white"
+                    variant="outline"
+                    bg={'transparent'}
+                    onClick={() => setStep(currentStep + 1)}
+                    _hover={{ opacity: 0.9 }}
+                    _active={{ opacity: 1 }}
+                  >
+                    Next
+                  </Button>
+                )}
+              </HStack>
+            </form>
           </Container>
         </GridItem>
       </Grid>

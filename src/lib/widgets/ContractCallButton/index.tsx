@@ -19,9 +19,10 @@ import { usePolling } from '@common/hooks/use-polling';
 // Components
 import { Notification } from '@lib/components/Notification';
 import { CloseButton } from '@lib/components/CloseButton';
+import { supabase } from '@lib/utils/supabase';
 
 type ContractCallType = {
-  onContractCall?: (data: any) => void;
+  proposalCall?: boolean;
 };
 
 export const ContractCallButton = (props: ButtonProps & ContractCallType) => {
@@ -56,6 +57,20 @@ export const ContractCallButton = (props: ButtonProps & ContractCallType) => {
       console.error({ e });
     }
   }
+  const onFinishUpdate = async (contractAddress: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('Proposals')
+        .update({ submitted: true })
+        .match({
+          contractAddress: contractAddress,
+        });
+      if (error) throw error;
+      console.log({ data });
+    } catch (e: any) {
+      console.error({ e });
+    }
+  };
 
   const handleOpenContractCall = async () => {
     const {
@@ -73,6 +88,9 @@ export const ContractCallButton = (props: ButtonProps & ContractCallType) => {
       functionArgs,
       postConditions,
       onFinish: (data) => {
+        if (props.proposalCall) {
+          onFinishUpdate(contractAddress);
+        }
         setTransaction({
           txId: data.txId,
           isPending: true,

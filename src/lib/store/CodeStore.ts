@@ -6,7 +6,7 @@ interface CodeStore {
 }
 const initialContractBoilerplate = `;; This is a boilerplate contract for a proposal 
 
-(impl-trait 'SPX9XMC02T56N9PRXV4AM9TS88MMQ6A1Z3375MHD.proposal-trait.proposal-trait)
+(impl-trait .proposal-trait.proposal-trait)
 
 (define-constant MICRO (pow u10 u2))
 
