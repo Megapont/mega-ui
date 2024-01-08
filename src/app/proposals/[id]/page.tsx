@@ -103,12 +103,12 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
   });
   const voting = { contractAddress: MEGA_VOTING_CONTRACT };
   const {
-    // isLoading,
-    // isIdle,
+    isLoading,
+    isIdle,
     data: proposalInfo,
   } = useProposal(proposalPrincipal);
   const { data: voterEvents } = useEvents(
-    voting?.contractAddress,
+    voting.contractAddress,
     'vote',
     proposalPrincipal,
     0
@@ -153,6 +153,7 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
     Number(proposalInfo?.proposal?.votesAgainst);
   const currentVoterEvent = (event: any) =>
     event?.voter?.value === currentStxAddress;
+
   const hasVoted = voterEvents?.some(currentVoterEvent);
   const isInactive =
     currentBlockHeight < proposalInfo?.proposal?.startBlockHeight;
@@ -182,9 +183,9 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
     convertedVotesFor > convertedVotesAgainst &&
     convertedTotalVotes >= Number(proposalInfo?.quorumThreshold);
 
-  // if (isLoading || isIdle) {
-  //   return <Loading />;
-  // }
+  if (isLoading || isIdle) {
+    return null;
+  }
 
   return (
     <motion.div
@@ -412,7 +413,7 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
                           No ({convertedVotesAgainst})
                         </Text>
                         <Progress
-                          colorScheme="whiteAlpha"
+                          colorScheme="red"
                           size="md"
                           value={getPercentage(
                             totalVotes,
@@ -672,6 +673,24 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
                             Number(proposalInfo?.executionDelay)}
                         </Text>
                       </HStack>
+                      <Divider />
+                      <HStack justify="space-between">
+                        <Text
+                          fontSize="sm"
+                          fontWeight="medium"
+                          color="gray.900"
+                        >
+                          Current Block
+                        </Text>
+                        <Text
+                          fontSize="sm"
+                          fontWeight="medium"
+                          color="light.900"
+                        >
+                          {Number(currentBlockHeight)}
+                        </Text>
+                      </HStack>
+                      <Divider />
                       <HStack justify="space-between">
                         <Text
                           fontSize="sm"
@@ -691,6 +710,7 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
                           {token?.symbol || 'MEGA'}
                         </Text>
                       </HStack>
+                      <Divider />
                       <HStack justify="space-between">
                         <Text
                           fontSize="sm"

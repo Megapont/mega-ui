@@ -362,6 +362,8 @@ export async function getEvents(
           )
         : serializedEvents;
 
+    console.log('filteredEvents', filteredEvents);
+
     return filteredEvents;
   } catch (e: any) {
     console.error({ e });
