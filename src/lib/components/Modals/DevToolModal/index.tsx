@@ -37,7 +37,14 @@ export const DevToolModal = ({ title, children }: any) => {
           <ModalHeader>Dev Tools</ModalHeader>
           {children}
           <ModalFooter>
-            <Button onClick={onClose}>Cancel</Button>
+            <Button
+              colorScheme="base"
+              bg="base.800"
+              textColor={'white'}
+              onClick={onClose}
+            >
+              Close
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

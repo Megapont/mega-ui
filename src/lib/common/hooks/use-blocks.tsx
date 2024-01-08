@@ -5,8 +5,6 @@ import { useNetwork } from '@micro-stacks/react';
 import { fetchBlocks } from 'micro-stacks/api';
 
 export function useBlocks() {
-  // TODO: check if slug is present and return error if not
-  // TODO: check if oranization exists before checking balance
   const [state, setState] = useState<any>({
     blocks: [],
     currentBlockHeight: 0,

@@ -217,7 +217,13 @@ const Proposals = () => {
                     </Text>
                     {!isLoading && (
                       <FaPlusCircle
-                        onClick={() => router.push('/proposals/create')}
+                        onClick={() => {
+                          if (!proposeData?.canPropose) {
+                            cannotPropose();
+                            return;
+                          }
+                          router.push('/proposals/create');
+                        }}
                       ></FaPlusCircle>
                     )}
                   </HStack>

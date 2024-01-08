@@ -46,7 +46,7 @@ export const Header = () => {
 
   const Governance = () => {
     const balance = defaultTo(userBalance, 0);
-    const decimals = defaultTo(token?.decimals, 0);
+    const decimals = defaultTo(token?.decimals, 2);
     const tokenBalance = defaultTo(
       convertToken(balance?.toString(), decimals),
       0
@@ -57,7 +57,7 @@ export const Header = () => {
         borderRadius="lg"
         label="Governance"
         value={tokenBalance} // TODO: Get decimals for token
-        info={defaultTo(token?.symbol, 'Token')}
+        info={defaultTo(token?.symbol || 'MEGA', 'Token')}
         path="governance"
       />
     );

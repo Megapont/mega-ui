@@ -25,6 +25,7 @@ export function useToken() {
           '.'
         )[0]}.${governanceToken?.contractAddress.split('.')[1]}`
       );
+      console.log(data);
       return { contractAddress, contractName, ...data };
     },
     {

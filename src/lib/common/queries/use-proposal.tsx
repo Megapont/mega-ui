@@ -1,10 +1,10 @@
 // Hook (use-proposal.tsx)
 import { useQuery } from 'react-query';
-import { useExtension } from '@common/queries';
 import { getProposal } from '@common/api';
+import { MEGA_VOTING_CONTRACT } from '../constants';
 
 export function useProposal(id: string) {
-  const { extension: voting } = useExtension('Voting');
+  const voting = { contractAddress: MEGA_VOTING_CONTRACT };
 
   const { isFetching, isIdle, isLoading, isError, data } = useQuery(
     ['proposal', id],

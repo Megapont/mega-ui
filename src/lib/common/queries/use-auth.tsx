@@ -27,7 +27,7 @@ export function useAuth() {
     isError,
     data: proposeData,
   } = useQuery(
-    ['propose-threshold'],
+    ['propose-threshold', submission?.contractAddress],
     async () => {
       const contractAddress = submission?.contractAddress.split('.')[0];
       const contractName = submission?.contractAddress.split('.')[1];
@@ -50,7 +50,9 @@ export function useAuth() {
         `${contractAddress}.${contractName}`,
         'voteThreshold'
       );
+
       const canVote = balance >= Number(voteThreshold);
+      console.log('voteThreshold', voteThreshold);
       return { voteThreshold, canVote };
     },
     isSignedIn ? signedInOptions : signedOutOptions

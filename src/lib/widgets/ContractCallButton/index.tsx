@@ -19,10 +19,9 @@ import { usePolling } from '@common/hooks/use-polling';
 // Components
 import { Notification } from '@lib/components/Notification';
 import { CloseButton } from '@lib/components/CloseButton';
-import { supabase } from '@lib/utils/supabase';
 
 type ContractCallType = {
-  proposalCall?: boolean;
+  onContractCall?: (data: any) => void;
 };
 
 export const ContractCallButton = (props: ButtonProps & ContractCallType) => {
@@ -57,20 +56,6 @@ export const ContractCallButton = (props: ButtonProps & ContractCallType) => {
       console.error({ e });
     }
   }
-  const onFinishUpdate = async (contractAddress: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('Proposals')
-        .update({ submitted: true })
-        .match({
-          contractAddress: contractAddress,
-        });
-      if (error) throw error;
-      console.log({ data });
-    } catch (e: any) {
-      console.error({ e });
-    }
-  };
 
   const handleOpenContractCall = async () => {
     const {
@@ -87,10 +72,7 @@ export const ContractCallButton = (props: ButtonProps & ContractCallType) => {
       functionName,
       functionArgs,
       postConditions,
-      onFinish: (data) => {
-        if (props.proposalCall) {
-          onFinishUpdate(contractAddress);
-        }
+      onFinish: (data: any) => {
         setTransaction({
           txId: data.txId,
           isPending: true,
@@ -102,52 +84,50 @@ export const ContractCallButton = (props: ButtonProps & ContractCallType) => {
     });
   };
 
-  const onComplete = useCallback(
-    (data: any) => {
-      toast({
-        duration: 3500,
-        isClosable: true,
-        position: 'bottom-right',
-        render: () => (
-          <Notification>
-            <Stack direction="row" p="4" spacing="3">
-              <Stack spacing="2.5">
-                <Stack spacing="1">
-                  <Text fontSize="md" color="light.900" fontWeight="medium">
-                    Transaction Minted
-                  </Text>
-                  <Text fontSize="sm" color="gray.900">
-                    Your transaction was minted successfully.
-                  </Text>
-                </Stack>
-                <ButtonGroup variant="link" size="sm" spacing="2">
-                  <Button
-                    color="red.900"
-                    as="a"
-                    target="_blank"
-                    href={
-                      process.env.NODE_ENV !== 'production'
-                        ? `http://localhost:8000/txid/${data.tx_id}?chain=testnet`
-                        : `https://explorer.stacks.co/txid/${data.tx_id}?chain=mainnet`
-                    }
-                  >
-                    View transaction
-                  </Button>
-                </ButtonGroup>
+  const onComplete = useCallback((data: any) => {
+    toast({
+      duration: 3500,
+      isClosable: true,
+      position: 'top-right',
+      render: () => (
+        <Notification>
+          <Stack direction="row" p="4" spacing="3">
+            <Stack spacing="2.5">
+              <Stack spacing="1">
+                <Text fontSize="md" color="light.900" fontWeight="medium">
+                  Transaction Minted
+                </Text>
+                <Text fontSize="sm" color="gray.900">
+                  Your transaction was minted successfully.
+                </Text>
               </Stack>
-              <CloseButton
-                aria-label="close"
-                transform="translateY(-6px)"
-                color="white"
-                onClick={() => toast.closeAll()}
-              />
+              <ButtonGroup variant="link" size="sm" spacing="2">
+                <Button
+                  color="secondary.900"
+                  as="a"
+                  target="_blank"
+                  href={
+                    process.env.NODE_ENV !== 'production'
+                      ? `http://localhost:8000/txid/${data.tx_id}?chain=testnet`
+                      : `https://explorer.stacks.co/txid/${data.tx_id}?chain=mainnet`
+                  }
+                >
+                  View transaction
+                </Button>
+              </ButtonGroup>
             </Stack>
-          </Notification>
-        ),
-      });
-    },
-    [toast]
-  );
+            <CloseButton
+              aria-label="close"
+              transform="translateY(-6px)"
+              color="white"
+              onClick={() => toast.closeAll()}
+            />
+          </Stack>
+        </Notification>
+      ),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Button

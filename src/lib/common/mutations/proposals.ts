@@ -40,6 +40,7 @@ export async function updateSubmittedProposal(proposal: {
   submitted: boolean;
 }) {
   try {
+    console.log('updating proposal');
     const { data, error } = await supabase
       .from('Proposals')
       .update({
@@ -53,6 +54,7 @@ export async function updateSubmittedProposal(proposal: {
     if (error) throw error;
     return data;
   } catch (e: any) {
+    console.log(e);
     console.error({ e });
   }
 }

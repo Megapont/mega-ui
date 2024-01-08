@@ -286,6 +286,15 @@ export async function getProposal(
       functionArgs: [stringAsciiCV('executionDelay')],
       functionName: 'get-parameter',
     });
+
+    const voteThreshold: any = await fetchReadOnlyFunction({
+      network,
+      contractAddress: contractAddress.split('.')[0],
+      contractName: contractAddress?.split('.')[1],
+      senderAddress: contractAddress.split('.')[0],
+      functionArgs: [stringAsciiCV('voteThreshold')],
+      functionName: 'get-parameter',
+    });
     return {
       contractAddress: proposalAddress,
       title,
@@ -294,6 +303,7 @@ export async function getProposal(
       proposal,
       quorumThreshold,
       executionDelay,
+      voteThreshold,
     };
   } catch (e: any) {
     console.log('here', e);
@@ -326,6 +336,7 @@ export async function getEvents(
       offset: offset,
       unanchored: false,
     });
+
     const { results } = data as any;
     const serializedEvents = results.map((event: any) => {
       const hex = event?.contract_log?.value.hex;

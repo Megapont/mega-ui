@@ -55,7 +55,11 @@ import {
   useAddProposal,
   useSubmitProposal,
 } from '@lib/common/mutations/proposals';
-import { useGenerateName, useVotingExtension } from '@lib/common/queries';
+import {
+  useGenerateName,
+  useSubmissionExtension,
+  useVotingExtension,
+} from '@lib/common/queries';
 import { ProposeButton } from '@lib/widgets/ProposeButton';
 import { useStore as useCodeStore } from '@lib/store/CodeStore';
 import { ContractDeployButton } from '@lib/widgets/ContractDeployButton';
@@ -132,6 +136,7 @@ const CreateProposal = () => {
 
   const { stxAddress } = useAccount();
   const { mutate: createProposal } = useAddProposal();
+  const { data: submissionData } = useSubmissionExtension();
 
   const [state, setState] = useState({ isDeployed: false });
 
@@ -146,8 +151,10 @@ const CreateProposal = () => {
       defineClarityLanguage(monaco);
     });
   }, []);
-  const startBlockHeight = currentBlockHeight + 144 + 10;
-  const endBlockHeight = startBlockHeight + 720;
+  const startBlockHeight =
+    currentBlockHeight + Number(submissionData?.minimumProposalStartDelay) + 25;
+  const endBlockHeight =
+    startBlockHeight + Number(submissionData?.proposalDuration);
 
   const onFinishInsert: any = async (data: any) => {
     setTransaction({ txId: data.txId, isPending: true });
@@ -155,7 +162,7 @@ const CreateProposal = () => {
 
     try {
       createProposal({
-        contractAddress: `${stxAddress}.${contractName}` || '',
+        contractAddress: `${stxAddress}.mdp-${contractName}` || '',
         proposer: stxAddress || '',
         type: 'proposal',
         transactionId: `0x${data.txId}`,
@@ -165,6 +172,7 @@ const CreateProposal = () => {
       });
       //closeOnDeploy();
     } catch (e: any) {
+      console.log(e);
       console.error({ e });
     }
   };
@@ -173,12 +181,13 @@ const CreateProposal = () => {
     setTransaction({ txId: data.txId, isPending: true });
     try {
       submitProposal({
-        contractAddress: `${stxAddress}.${contractName}`,
+        contractAddress: `${stxAddress}.mdp-${contractName}`,
         startBlockHeight,
         endBlockHeight,
         submitted: true,
       });
     } catch (e: any) {
+      console.log('Error +++++++++++++++>');
       console.error({ e });
     }
   };

@@ -15,7 +15,11 @@ export function useVotingExtension() {
         voting?.contractAddress,
         'executionDelay'
       );
-      return { executionDelay };
+      const voteThreshold: any = await getParameter(
+        voting?.contractAddress,
+        'voteThreshold'
+      );
+      return { executionDelay, voteThreshold };
     },
     {
       enabled: !!voting,
