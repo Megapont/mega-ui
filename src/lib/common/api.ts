@@ -306,7 +306,6 @@ export async function getProposal(
       voteThreshold,
     };
   } catch (e: any) {
-    console.log('here', e);
     console.error({ e });
   }
 }
@@ -361,8 +360,6 @@ export async function getEvents(
             (item: any) => item?.proposal?.value === filterByProposal
           )
         : serializedEvents;
-
-    console.log('filteredEvents', filteredEvents);
 
     return filteredEvents;
   } catch (e: any) {

@@ -1,12 +1,11 @@
 // Hook (use-balance.tsx)
 import { useQuery } from 'react-query';
-//import { useExtension } from '@common/queries';
 import { getBalanceOf } from '@common/api';
+import { MEGA_VAULT_CONTRACT } from '@common/constants';
 
 export function useBalance(assetAddress: string) {
-  //const { extension: vault } = useExtension('Vault');
   const vault = {
-    contractAddress: 'SPKPXQ0X3A4D1KZ4XTP1GABJX1N36VW10D02TK9X.mega-vault',
+    contractAddress: MEGA_VAULT_CONTRACT,
   };
 
   const { isFetching, isIdle, isLoading, data } = useQuery(

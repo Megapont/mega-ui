@@ -24,18 +24,18 @@ export const metadata: Metadata = {
     telephone: false,
   },
   openGraph: {
-    url: 'https://dao.magepont.com',
-    title: 'nextarter-chakra',
-    description: 'Next.js + chakra-ui + TypeScript template',
+    url: 'https://dao.megapont.com',
+    title: 'Mega DAO',
+    description: 'A DAO for the megapont community',
     images: {
-      url: 'https://og-image.sznm.dev/**nextarter-chakra**.sznm.dev.png?theme=dark&md=1&fontSize=125px&images=https%3A%2F%2Fsznm.dev%2Favataaars.svg&widths=250',
-      alt: 'nextarter-chakra.sznm.dev og-image',
+      url: '/MEGA_DA_OG.png',
+      alt: 'mega DAO og-image',
     },
   },
-  // twitter: {
-  //   creator: '@sozonome',
-  //   card: 'summary_large_image',
-  // },
+  twitter: {
+    creator: '@MegapontNFT',
+    card: 'summary_large_image',
+  },
 };
 
 export const viewport: Viewport = {
