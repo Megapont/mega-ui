@@ -56,7 +56,7 @@ export const Header = () => {
         flex="1"
         borderRadius="lg"
         label="Governance"
-        value={tokenBalance} // TODO: Get decimals for token
+        value={tokenBalance}
         info={defaultTo(token?.symbol || 'MEGA', 'Token')}
         path="governance"
       />

@@ -51,15 +51,8 @@ import { FiSend } from 'react-icons/fi';
 // Store
 import { Editor, loader, type Monaco } from '@monaco-editor/react';
 
-import {
-  useAddProposal,
-  useSubmitProposal,
-} from '@lib/common/mutations/proposals';
-import {
-  useGenerateName,
-  useSubmissionExtension,
-  useVotingExtension,
-} from '@lib/common/queries';
+import { useSubmitProposal } from '@lib/common/mutations/proposals';
+import { useGenerateName, useSubmissionExtension } from '@lib/common/queries';
 import { ProposeButton } from '@lib/widgets/ProposeButton';
 import { useStore as useCodeStore } from '@lib/store/CodeStore';
 import { ContractDeployButton } from '@lib/widgets/ContractDeployButton';
@@ -125,7 +118,6 @@ const CreateProposal = () => {
   console.log({ currentStep });
   const { data: contractName } = useGenerateName();
   const toast = useToast();
-  const { data: votingData } = useVotingExtension();
 
   const { mutate: submitProposal } = useSubmitProposal();
   const [transaction, setTransaction] = useState({
@@ -135,12 +127,12 @@ const CreateProposal = () => {
   const { currentBlockHeight } = useBlocks();
 
   const { stxAddress } = useAccount();
-  const { mutate: createProposal } = useAddProposal();
+
   const { data: submissionData } = useSubmissionExtension();
 
-  const [state, setState] = useState({ isDeployed: false });
+  const [state, setState] = useState({ isProposed: false });
 
-  const { isDeployed } = state;
+  const { isProposed } = state;
 
   usePolling(() => {
     fetchTransactionData(transaction.txId);
@@ -156,27 +148,6 @@ const CreateProposal = () => {
   const endBlockHeight =
     startBlockHeight + Number(submissionData?.proposalDuration);
 
-  const onFinishInsert: any = async (data: any) => {
-    setTransaction({ txId: data.txId, isPending: true });
-    const executionDelay = Number(votingData?.executionDelay);
-
-    try {
-      createProposal({
-        contractAddress: `${stxAddress}.mdp-${contractName}` || '',
-        proposer: stxAddress || '',
-        type: 'proposal',
-        transactionId: `0x${data.txId}`,
-        title,
-        description,
-        executionDelay,
-      });
-      //closeOnDeploy();
-    } catch (e: any) {
-      console.log(e);
-      console.error({ e });
-    }
-  };
-
   const onFinishUpdate = async (data: any) => {
     setTransaction({ txId: data.txId, isPending: true });
     try {
@@ -187,7 +158,6 @@ const CreateProposal = () => {
         submitted: true,
       });
     } catch (e: any) {
-      console.log('Error +++++++++++++++>');
       console.error({ e });
     }
   };
@@ -206,8 +176,8 @@ const CreateProposal = () => {
           isPending: false,
         });
         onComplete(transaction);
-        setState({ isDeployed: true });
         setStep(currentStep + 1);
+        setState({ isProposed: true });
       }
     } catch (e: any) {
       console.error({ e });
@@ -319,7 +289,7 @@ const CreateProposal = () => {
     },
 
     {
-      title: 'Review & Submit ',
+      title: 'Review & Deploy ',
       description:
         currentStep <= 2 ? (
           <></>
@@ -783,7 +753,7 @@ const CreateProposal = () => {
           py={{ base: '15', md: '20' }}
         >
           <Container>
-            {isDeployed && (
+            {isProposed && (
               <Confetti
                 height={1200}
                 width={1280}
@@ -804,7 +774,7 @@ const CreateProposal = () => {
                 bottom={'20'}
                 right={'20'}
               >
-                {currentStep > 0 && !isDeployed && (
+                {currentStep > 0 && currentStep < 3 && (
                   <Button
                     color="white"
                     variant="outline"
@@ -821,6 +791,7 @@ const CreateProposal = () => {
                 {currentStep > 3 && <></>}
                 {currentStep === 3 && (
                   <ProposeButton
+                    w={'15vw'}
                     label={
                       transaction.isPending ? (
                         <Flex gap={3} align={'center'}>
@@ -843,24 +814,14 @@ const CreateProposal = () => {
                 )}{' '}
                 {currentStep === 2 && (
                   <ContractDeployButton
+                    title={title}
                     color="white"
                     bg="secondary.900"
                     colorScheme="base"
                     w={'15vw'}
-                    label={
-                      transaction.isPending ? (
-                        <Flex gap={3} align={'center'}>
-                          <Spinner size="sm" />
-                          Deploying
-                        </Flex>
-                      ) : (
-                        <Text>Deploy Contract</Text>
-                      )
-                    }
-                    disabled={transaction.isPending}
-                    onFinish={onFinishInsert}
                     contractName={`mdp-${contractName}`}
                     description={description}
+                    setState={() => setStep(currentStep + 1)}
                   ></ContractDeployButton>
                 )}
                 {(currentStep === 0 || currentStep === 1) && (

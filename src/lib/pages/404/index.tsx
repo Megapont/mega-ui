@@ -41,10 +41,7 @@ const Page404 = () => {
         </Heading>
 
         <Box textAlign="center" marginTop={4}>
-          <Text fontSize="sm" color="gray">
-            It&apos;s Okay!
-          </Text>
-          <Button as={Link} href="/" size="sm">
+          <Button colorScheme="base" as={Link} href="/" size="sm">
             Let&apos;s Head Back
           </Button>
         </Box>

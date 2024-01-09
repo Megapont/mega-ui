@@ -51,7 +51,6 @@ import {
   convertToken,
   getPercentage,
   tokenToNumber,
-  tokenToDecimals,
 } from '@common/helpers';
 
 // Queries
@@ -273,7 +272,11 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
                           <FaExclamationCircle fontSize="0.9rem" />
 
                           <Text fontSize="sm" fontWeight="medium">
-                            At least {Number(proposalInfo?.voteThreshold)}{' '}
+                            At least{' '}
+                            {convertToken(
+                              Number(proposalInfo?.voteThreshold).toString(),
+                              token?.decimals || 2
+                            )}{' '}
                             {token?.symbol || 'MEGA'} required to execute
                           </Text>
                         </HStack>
@@ -358,9 +361,9 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
 
                           <Text fontSize="sm" fontWeight="medium">
                             At least{' '}
-                            {tokenToDecimals(
-                              Number(proposalInfo?.voteThreshold),
-                              2
+                            {convertToken(
+                              Number(proposalInfo?.voteThreshold).toString(),
+                              token?.decimals || 2
                             )}{' '}
                             {token?.symbol || 'MEGA'} required to vote
                           </Text>
@@ -704,9 +707,10 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
                           fontWeight="medium"
                           color="light.900"
                         >
-                          {parseInt(
-                            proposalInfo?.quorumThreshold
-                          )?.toLocaleString('en-US')}{' '}
+                          {convertToken(
+                            Number(proposalInfo?.quorumThreshold).toString(),
+                            Number(token?.decimals || 2)
+                          )}{' '}
                           {token?.symbol || 'MEGA'}
                         </Text>
                       </HStack>
