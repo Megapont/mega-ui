@@ -115,7 +115,7 @@ const CreateProposal = () => {
     maxStep: 4,
     initialStep: 0,
   });
-  console.log({ currentStep });
+
   const { data: contractName } = useGenerateName();
   const toast = useToast();
 

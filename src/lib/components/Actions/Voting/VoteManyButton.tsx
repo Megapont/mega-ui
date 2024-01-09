@@ -56,6 +56,9 @@ export const VoteManyButton = (props: TVoteManyButtonProps) => {
   };
 
   const handleVote = useCallback(async () => {
+    if (isDisabled) {
+      return;
+    }
     const delegatorAddresses = map(delegatorData, 'delegatorAddress');
     const delegateVote = listCV([
       tupleCV({

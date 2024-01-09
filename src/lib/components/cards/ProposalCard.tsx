@@ -28,7 +28,6 @@ const FADE_IN_VARIANTS = {
 export const ProposalCard = ({
   contractAddress,
   title,
-  type,
   description,
   startBlockHeight,
   endBlockHeight,
@@ -96,7 +95,7 @@ export const ProposalCard = ({
             cursor: 'pointer',
           }}
         >
-          <Stack direction="row" minH="15vh" justify="center">
+          <Stack w="full" direction="row" minH="15vh" justify="start">
             <Stack
               spacing="4"
               direction={{
@@ -136,7 +135,7 @@ export const ProposalCard = ({
                         ]}
                       />
                       <Text fontWeight="medium" fontSize="lg" lineHeight="1.15">
-                        {title} {type}
+                        {title}
                       </Text>
                     </HStack>
                     <Text fontWeight="regular" fontSize="sm" color="gray.900">

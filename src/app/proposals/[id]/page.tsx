@@ -21,6 +21,7 @@ import {
   TabList,
   TabPanels,
   Text,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 
 import { defaultTo } from 'lodash';
@@ -71,6 +72,8 @@ import { MEGA_VOTING_CONTRACT } from '@lib/common/constants';
 import { supabase } from '@lib/utils/supabase';
 import { VoteManyButton } from '@lib/components/Actions/Voting/VoteManyButton';
 import { ExecuteButton } from '@lib/components/Actions/ExecuteButton';
+import { ProposeButton } from '@lib/components/Actions/ProposeButton';
+import { EmptyState } from '@lib/components/EmptyState';
 
 const FADE_IN_VARIANTS = {
   hidden: { opacity: 0, x: 0, y: 0 },
@@ -96,6 +99,7 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
   const { isSignedIn } = useAuth();
   const { token } = useToken();
   const { balance } = useTokenBalance();
+  const isMobile = useBreakpointValue({ base: true, md: false });
   const [info, setInfo] = useState({
     title: '',
     description: '',
@@ -183,7 +187,32 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
     convertedTotalVotes >= Number(proposalInfo?.quorumThreshold);
 
   if (isLoading || isIdle) {
-    return null;
+    return (
+      <Container maxW="5xl">
+        <Stack spacing={{ base: '6', lg: '4' }} mt="5">
+          <Container>
+            <motion.div
+              variants={FADE_IN_VARIANTS}
+              initial={FADE_IN_VARIANTS.hidden}
+              animate={FADE_IN_VARIANTS.enter}
+              exit={FADE_IN_VARIANTS.exit}
+              transition={{ duration: 0.75, type: 'linear' }}
+            >
+              <Stack
+                spacing="6"
+                display={isMobile ? 'block' : 'flex'}
+                direction={{ base: 'column', md: 'row' }}
+                justify="center"
+                align="center"
+                color="white"
+              >
+                <EmptyState heading="Fetching proposal data..." />
+              </Stack>
+            </motion.div>
+          </Container>
+        </Stack>
+      </Container>
+    );
   }
 
   return (
@@ -388,67 +417,69 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
                     exit={FADE_IN_VARIANTS.exit}
                     transition={{ duration: 0.25, type: 'linear' }}
                   >
-                    <Stack mt="2" spacing="3">
-                      <Stack>
-                        <Text
-                          color="gray.900"
-                          fontSize="sm"
-                          fontWeight="semibold"
-                        >
-                          Yes ({convertedVotesFor})
-                        </Text>
-                        <Progress
-                          colorScheme="secondary"
-                          size="md"
-                          value={getPercentage(
-                            totalVotes,
-                            Number(proposalInfo?.proposal?.votesFor)
-                          )}
-                          bg="base.500"
-                        />
+                    {proposalInfo?.proposal && (
+                      <Stack mt="2" spacing="3">
+                        <Stack>
+                          <Text
+                            color="gray.900"
+                            fontSize="sm"
+                            fontWeight="semibold"
+                          >
+                            Yes ({convertedVotesFor})
+                          </Text>
+                          <Progress
+                            colorScheme="secondary"
+                            size="md"
+                            value={getPercentage(
+                              totalVotes,
+                              Number(proposalInfo?.proposal?.votesFor)
+                            )}
+                            bg="base.500"
+                          />
+                        </Stack>
+                        <Stack>
+                          <Text
+                            color="gray.900"
+                            fontSize="sm"
+                            fontWeight="semibold"
+                          >
+                            No ({convertedVotesAgainst})
+                          </Text>
+                          <Progress
+                            colorScheme="red"
+                            size="md"
+                            value={getPercentage(
+                              totalVotes,
+                              Number(proposalInfo?.proposal?.votesAgainst)
+                            )}
+                            bg="base.500"
+                          />
+                        </Stack>
+                        <Stack>
+                          <Text
+                            color="gray.900"
+                            fontSize="sm"
+                            fontWeight="semibold"
+                          >
+                            Quorum ({convertedVotesFor + convertedVotesAgainst})
+                          </Text>
+                          <Progress
+                            colorScheme="gray"
+                            size="md"
+                            value={getPercentage(
+                              Number(proposalInfo?.quorumThreshold),
+                              convertedVotesFor + convertedVotesAgainst
+                            )}
+                            bg="base.500"
+                          />
+                        </Stack>
                       </Stack>
-                      <Stack>
-                        <Text
-                          color="gray.900"
-                          fontSize="sm"
-                          fontWeight="semibold"
-                        >
-                          No ({convertedVotesAgainst})
-                        </Text>
-                        <Progress
-                          colorScheme="red"
-                          size="md"
-                          value={getPercentage(
-                            totalVotes,
-                            Number(proposalInfo?.proposal?.votesAgainst)
-                          )}
-                          bg="base.500"
-                        />
-                      </Stack>
-                      <Stack>
-                        <Text
-                          color="gray.900"
-                          fontSize="sm"
-                          fontWeight="semibold"
-                        >
-                          Quorum ({convertedVotesFor + convertedVotesAgainst})
-                        </Text>
-                        <Progress
-                          colorScheme="gray"
-                          size="md"
-                          value={getPercentage(
-                            Number(proposalInfo?.quorumThreshold),
-                            convertedVotesFor + convertedVotesAgainst
-                          )}
-                          bg="base.500"
-                        />
-                      </Stack>
-                    </Stack>
+                    )}
                   </motion.div>
                 </Stack>
                 {!proposalInfo?.proposal ? (
                   <ButtonGroup>
-                    {/* <ProposeButton
+                    <ProposeButton
                       bg="base.800"
                       color="light.900"
                       text="Propose"
@@ -460,14 +491,13 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
                       _hover={{
                         bg: 'base.800',
                         opacity: 0.5,
-                        cursor: 'not-allowed',
                       }}
                       notDeployer={
                         proposalContractAddress !== currentStxAddress
                       }
-                      isFullWidth
+                      w="20vw"
                       proposalPrincipal={proposalPrincipal}
-                    /> */}
+                    />
                     {!isRemoving ? (
                       <Button
                         color="red.500"
