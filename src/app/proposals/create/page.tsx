@@ -104,12 +104,14 @@ const defineClarityLanguage = (monaco: Monaco) => {
 const CreateProposal = () => {
   const router = useRouter();
   const { network } = useNetwork();
+
   const { register, getValues } = useForm({
     defaultValues: {
       title: '',
       description: '',
     },
   });
+
   const { title, description } = getValues();
   const [currentStep, { setStep }] = useStep({
     maxStep: 4,

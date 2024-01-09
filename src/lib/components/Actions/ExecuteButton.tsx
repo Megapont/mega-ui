@@ -111,7 +111,7 @@ export const ExecuteButton = (props: TExecuteButtonProps) => {
     setTransactionId(data.txId);
     toast({
       duration: 5000,
-      position: 'bottom-right',
+      position: 'top-right',
       isClosable: true,
       render: () => (
         <TxToast

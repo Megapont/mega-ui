@@ -11,7 +11,6 @@ type ContractDeployType = {
   label: JSX.Element;
   proposalAddress: string;
   startBlockHeight: number;
-
   onFinish?: (data: any) => void;
 };
 

@@ -31,6 +31,7 @@ export const LandingFooter = () => {
             colorScheme="base"
             aria-label={'discord'}
             icon={<FaDiscord></FaDiscord>}
+            onClick={() => window.open('https://discord.gg/megapont')}
           ></IconButton>
           <IconButton
             variant="outline"
@@ -39,6 +40,7 @@ export const LandingFooter = () => {
             colorScheme="base"
             aria-label={'twitter'}
             icon={<FaTwitter></FaTwitter>}
+            onClick={() => window.open('https://twitter.com/MegapontNFT')}
           ></IconButton>
           <IconButton
             variant="outline"
@@ -47,6 +49,7 @@ export const LandingFooter = () => {
             colorScheme="base"
             aria-label="medium"
             icon={<FaMedium></FaMedium>}
+            onClick={() => window.open('https://medium.com/megapont')}
           ></IconButton>
         </Flex>
       </Flex>
