@@ -48,7 +48,7 @@ export const ProposalCard = ({
           Inactive
         </Badge>
       ) : concluded ? (
-        <Badge bg="base.800" color="secondary.900" size="sm" py="1" px="3">
+        <Badge bg="base.800" color="green" size="sm" py="1" px="3">
           Executed
         </Badge>
       ) : isClosed ? (
@@ -56,11 +56,11 @@ export const ProposalCard = ({
           Ready to execute
         </Badge>
       ) : isOpen ? (
-        <Badge bg="base.800" color="secondary.900" size="sm" py="1" px="3">
+        <Badge bg="base.800" color="green.500" size="sm" py="1" px="3">
           Live
         </Badge>
       ) : (
-        <Badge bg="base.800" color="secondary.900" size="sm" py="1" px="3">
+        <Badge bg="base.800" color="yellow.200" size="sm" py="1" px="3">
           Pending
         </Badge>
       )}
@@ -95,8 +95,9 @@ export const ProposalCard = ({
             cursor: 'pointer',
           }}
         >
-          <Stack w="full" direction="row" minH="15vh" justify="start">
+          <Stack direction="row" minH="15vh" justify="start">
             <Stack
+              w="100%"
               spacing="4"
               direction={{
                 base: 'row',
