@@ -467,7 +467,14 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
                             colorScheme="gray"
                             size="md"
                             value={getPercentage(
-                              Number(proposalInfo?.quorumThreshold),
+                              Number(
+                                convertToken(
+                                  Number(
+                                    proposalInfo?.quorumThreshold
+                                  ).toString(),
+                                  token?.decimals || 2
+                                )
+                              ),
                               convertedVotesFor + convertedVotesAgainst
                             )}
                             bg="base.500"
