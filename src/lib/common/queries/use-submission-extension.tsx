@@ -19,7 +19,11 @@ export function useSubmissionExtension() {
         submission?.contractAddress,
         'proposalDuration'
       );
-      return { minimumProposalStartDelay, proposalDuration };
+      const proposeThreshold: any = await getParameter(
+        submission?.contractAddress,
+        'proposeThreshold'
+      );
+      return { minimumProposalStartDelay, proposalDuration, proposeThreshold };
     },
     {
       enabled: !!submission,
