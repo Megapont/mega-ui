@@ -7,21 +7,20 @@ import {
   ButtonGroup,
   CloseButton,
   Container,
+  Flex,
   FormControl,
   Grid,
   GridItem,
   HStack,
   Icon,
   Input,
+  Spinner,
   Stack,
   Text,
   Textarea,
+  useBreakpointValue,
   useToast,
   VStack,
-  Spinner,
-  FormErrorMessage,
-  Flex,
-  useBreakpointValue,
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -42,11 +41,11 @@ import Confetti from 'react-confetti';
 import { truncate } from '@common/helpers';
 import Avatar from 'boring-avatars';
 import {
-  FaCheckCircle,
-  FaPaperclip,
   FaAngleLeft,
   FaAngleRight,
+  FaCheckCircle,
   FaFileUpload,
+  FaPaperclip,
 } from 'react-icons/fa';
 import { FiSend } from 'react-icons/fi';
 
@@ -59,11 +58,11 @@ import {
   useSubmissionExtension,
   useTokenBalance,
 } from '@lib/common/queries';
-import { ProposeButton } from '@lib/widgets/ProposeButton';
+import { EmptyState } from '@lib/components/EmptyState';
 import { useStore as useCodeStore } from '@lib/store/CodeStore';
 import { ContractDeployButton } from '@lib/widgets/ContractDeployButton';
+import { ProposeButton } from '@lib/widgets/ProposeButton';
 import { useRouter } from 'next/navigation';
-import { EmptyState } from '@lib/components/EmptyState';
 
 const FADE_IN_VARIANTS = {
   hidden: { opacity: 0, x: 0, y: 0 },
@@ -112,12 +111,7 @@ const CreateProposal = () => {
   const router = useRouter();
   const { network } = useNetwork();
 
-  const {
-    register,
-    getValues,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const { register, getValues, handleSubmit } = useForm({
     defaultValues: {
       title: '',
       description: '',
@@ -209,7 +203,95 @@ const CreateProposal = () => {
       console.error({ e });
     }
   }
-
+  const ProposalDetails = () => {
+    console.log('rendered');
+    return (
+      <>
+        <Stack
+          spacing="0"
+          mb="5"
+          direction={{ base: 'column', md: 'column' }}
+          justify="space-between"
+          color="white"
+        >
+          <Text fontSize="2xl" fontWeight="semibold" color="light.900">
+            Proposal Title
+          </Text>
+          <Stack direction="column">
+            <Text fontSize="sm" fontWeight="regular" color="gray.900">
+              Title for the new proposal
+            </Text>
+          </Stack>
+        </Stack>
+        <Stack color="light.900" spacing="6" direction="column" maxW="xl">
+          <FormControl>
+            <Input
+              required
+              color="light.900"
+              fontSize="xl"
+              py="1"
+              px="2"
+              pl="2"
+              bg="base.900"
+              border="none"
+              resize="none"
+              autoComplete="off"
+              placeholder="Proposal for..."
+              {...register('title')}
+              _focus={{
+                border: 'none',
+              }}
+            />
+          </FormControl>
+        </Stack>
+        <Stack
+          spacing="0"
+          mt="10"
+          mb="5"
+          direction={{ base: 'column', md: 'column' }}
+          justify="space-between"
+          color="white"
+        >
+          <Text fontSize="2xl" fontWeight="semibold" color="light.900">
+            Proposal details
+          </Text>
+          <Stack direction="column">
+            <Text fontSize="sm" fontWeight="regular" color="gray.900">
+              Provide some additional context for the proposal.
+            </Text>
+          </Stack>
+        </Stack>
+        <Stack
+          color="light.900"
+          spacing="6"
+          direction="column"
+          maxW="xl"
+          mb={'5'}
+        >
+          <FormControl>
+            <Textarea
+              color="light.900"
+              fontSize="xl"
+              required
+              py="1"
+              px="2"
+              pl="2"
+              bg="base.900"
+              border="none"
+              rows={5}
+              resize="none"
+              autoComplete="off"
+              placeholder="This proposal once passed will..."
+              {...register('description')}
+              _focus={{
+                border: 'none',
+              }}
+            />
+          </FormControl>
+        </Stack>
+      </>
+    );
+  };
   const onComplete = useCallback(
     (data: any) => {
       toast({
@@ -426,107 +508,6 @@ const CreateProposal = () => {
               onChange={(value) => setCode(value as string)}
             />
           </Stack>
-        </Stack>
-      </>
-    );
-  };
-
-  const ProposalDetails = () => {
-    return (
-      <>
-        <Stack
-          spacing="0"
-          mb="5"
-          direction={{ base: 'column', md: 'column' }}
-          justify="space-between"
-          color="white"
-        >
-          <Text fontSize="2xl" fontWeight="semibold" color="light.900">
-            Proposal Title
-          </Text>
-          <Stack direction="column">
-            <Text fontSize="sm" fontWeight="regular" color="gray.900">
-              Title for the new proposal
-            </Text>
-          </Stack>
-        </Stack>
-        <Stack color="light.900" spacing="6" direction="column" maxW="xl">
-          <FormControl isInvalid={errors.title ? true : false}>
-            <Input
-              color="light.900"
-              fontSize="xl"
-              py="1"
-              px="2"
-              pl="2"
-              bg="base.900"
-              border="none"
-              resize="none"
-              autoComplete="off"
-              placeholder="Proposal for..."
-              {...register('title', {
-                required: 'Title is required',
-              })}
-              _focus={{
-                border: 'none',
-              }}
-            />
-            <FormErrorMessage>
-              {errors.title && errors.title.message}
-            </FormErrorMessage>
-          </FormControl>
-        </Stack>
-        <Stack
-          spacing="0"
-          mt="10"
-          mb="5"
-          direction={{ base: 'column', md: 'column' }}
-          justify="space-between"
-          color="white"
-        >
-          <Text fontSize="2xl" fontWeight="semibold" color="light.900">
-            Proposal details
-          </Text>
-          <Stack direction="column">
-            <Text fontSize="sm" fontWeight="regular" color="gray.900">
-              Provide some additional context for the proposal.
-            </Text>
-          </Stack>
-        </Stack>
-        <Stack
-          color="light.900"
-          spacing="6"
-          direction="column"
-          maxW="xl"
-          mb={'5'}
-        >
-          <FormControl isInvalid={errors.description ? true : false}>
-            <Textarea
-              color="light.900"
-              fontSize="xl"
-              py="1"
-              px="2"
-              pl="2"
-              bg="base.900"
-              border="none"
-              rows={5}
-              resize="none"
-              autoComplete="off"
-              placeholder="This proposal once passed will..."
-              {...register('description', {
-                required: 'description is required',
-                minLength: {
-                  message: 'description must be at least 50 characters',
-                  value: 50,
-                },
-              })}
-              _focus={{
-                border: 'none',
-              }}
-            />
-            <FormErrorMessage>
-              {errors.description && errors.description.message}
-            </FormErrorMessage>
-          </FormControl>
         </Stack>
       </>
     );

@@ -122,7 +122,7 @@ export const ProposalCard = ({
               </HStack>
               <Stack>
                 <HStack spacing="3" justify="space-between">
-                  <Stack direction="column" spacing="3">
+                  <Stack w={'100%'} direction="column" spacing="3">
                     <HStack align="center" spacing="2">
                       <Avatar
                         size={15}
