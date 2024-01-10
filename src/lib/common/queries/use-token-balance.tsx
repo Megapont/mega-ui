@@ -14,7 +14,7 @@ export function useTokenBalance() {
     isLoading,
     data: balance,
   } = useQuery(
-    ['user-balance', `${governanceToken?.contractAddress}`],
+    ['user-balance', `${governanceToken?.contractAddress}`, currentStxAddress],
     async () => {
       const data = await getTokenBalance(
         currentStxAddress,

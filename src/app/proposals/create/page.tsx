@@ -20,6 +20,7 @@ import {
   VStack,
   Spinner,
   Flex,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -52,11 +53,16 @@ import { FiSend } from 'react-icons/fi';
 import { Editor, loader, type Monaco } from '@monaco-editor/react';
 
 import { useSubmitProposal } from '@lib/common/mutations/proposals';
-import { useGenerateName, useSubmissionExtension } from '@lib/common/queries';
+import {
+  useGenerateName,
+  useSubmissionExtension,
+  useTokenBalance,
+} from '@lib/common/queries';
 import { ProposeButton } from '@lib/widgets/ProposeButton';
 import { useStore as useCodeStore } from '@lib/store/CodeStore';
 import { ContractDeployButton } from '@lib/widgets/ContractDeployButton';
 import { useRouter } from 'next/navigation';
+import { EmptyState } from '@lib/components/EmptyState';
 
 const FADE_IN_VARIANTS = {
   hidden: { opacity: 0, x: 0, y: 0 },
@@ -126,15 +132,22 @@ const CreateProposal = () => {
     txId: '',
     isPending: false,
   });
+  const {
+    balance,
+    isLoading: tokenBalanceLoading,
+    isIdle: tokenBalanceIdle,
+  } = useTokenBalance();
   const { currentBlockHeight } = useBlocks();
 
   const { stxAddress } = useAccount();
 
-  const { data: submissionData } = useSubmissionExtension();
+  const { data: submissionData, isLoading, isIdle } = useSubmissionExtension();
 
   const [state, setState] = useState({ isProposed: false });
 
   const { isProposed } = state;
+
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   usePolling(() => {
     fetchTransactionData(transaction.txId);
@@ -149,6 +162,7 @@ const CreateProposal = () => {
     currentBlockHeight + Number(submissionData?.minimumProposalStartDelay) + 25;
   const endBlockHeight =
     startBlockHeight + Number(submissionData?.proposalDuration);
+  const canPropose = balance >= Number(submissionData?.proposeThreshold);
 
   const onFinishUpdate = async (data: any) => {
     setTransaction({ txId: data.txId, isPending: true });
@@ -243,6 +257,40 @@ const CreateProposal = () => {
       console.log({ transaction });
     }
   }, [transaction]);
+
+  if (isLoading || isIdle || tokenBalanceLoading || tokenBalanceIdle) {
+    return (
+      <Container maxW="5xl">
+        <Stack spacing={{ base: '6', lg: '4' }} mt="5">
+          <Container>
+            <motion.div
+              variants={FADE_IN_VARIANTS}
+              initial={FADE_IN_VARIANTS.hidden}
+              animate={FADE_IN_VARIANTS.enter}
+              exit={FADE_IN_VARIANTS.exit}
+              transition={{ duration: 0.75, type: 'linear' }}
+            >
+              <Stack
+                spacing="6"
+                display={isMobile ? 'block' : 'flex'}
+                direction={{ base: 'column', md: 'row' }}
+                justify="center"
+                align="center"
+                color="white"
+              >
+                <EmptyState heading="loading..." />
+              </Stack>
+            </motion.div>
+          </Container>
+        </Stack>
+      </Container>
+    );
+  }
+
+  if (!canPropose) {
+    router.push('/proposals');
+    return null;
+  }
 
   const createProposalSteps = [
     {
