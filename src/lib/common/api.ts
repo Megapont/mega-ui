@@ -57,7 +57,7 @@ export async function getExtension(name: string) {
   }
 }
 
-export async function getDBProposals(organizationId: string, filter: string) {
+export async function getDBProposals(filter: string) {
   const query = supabase
     .from('Proposals')
     .select('*')

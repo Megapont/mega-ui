@@ -4,9 +4,9 @@ import { getDBProposals } from '@common/api';
 
 export function useProposals(filter = 'all') {
   const { isFetching, isIdle, isLoading, isError, data } = useQuery(
-    ['proposals', 'mega-dao', filter],
+    ['proposals', filter],
     async () => {
-      const data = await getDBProposals('mega-dao', filter);
+      const data = await getDBProposals(filter);
       return data;
     },
     {
