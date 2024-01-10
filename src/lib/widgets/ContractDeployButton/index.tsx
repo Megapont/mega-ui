@@ -65,6 +65,12 @@ export const ContractDeployButton = (
         });
         onComplete(transaction);
         setState();
+      } else if (transaction?.tx_status === 'abort_by_response') {
+        setTransaction({
+          txId: '',
+          isPending: false,
+        });
+        onFailed(transaction);
       }
     } catch (e: any) {
       console.error({ e });
@@ -87,6 +93,52 @@ export const ContractDeployButton = (
                   </Text>
                   <Text fontSize="sm" color="gray.900">
                     Your transaction was successfully executed.
+                  </Text>
+                </Stack>
+                <ButtonGroup variant="link" size="sm" spacing="2">
+                  <Button
+                    color="secondary.900"
+                    as="a"
+                    target="_blank"
+                    href={
+                      process.env.NODE_ENV !== 'production'
+                        ? `http://localhost:8000/txid/${data.tx_id}?chain=testnet`
+                        : `https://explorer.stacks.co/txid/${data.tx_id}?chain=mainnet`
+                    }
+                  >
+                    View transaction
+                  </Button>
+                </ButtonGroup>
+              </Stack>
+              <CloseButton
+                aria-label="close"
+                transform="translateY(-6px)"
+                color="white"
+                onClick={() => toast.closeAll()}
+              />
+            </Stack>
+          </Notification>
+        ),
+      });
+    },
+    [toast]
+  );
+  const onFailed = useCallback(
+    (data: any) => {
+      toast({
+        duration: 3500,
+        isClosable: true,
+        position: 'top-right',
+        render: () => (
+          <Notification>
+            <Stack direction="row" p="4" spacing="3">
+              <Stack spacing="2.5">
+                <Stack spacing="1">
+                  <Text fontSize="md" color="light.900" fontWeight="medium">
+                    Transaction Failed!
+                  </Text>
+                  <Text fontSize="sm" color="gray.900">
+                    Your transaction failed to execute.
                   </Text>
                 </Stack>
                 <ButtonGroup variant="link" size="sm" spacing="2">
