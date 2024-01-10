@@ -19,6 +19,7 @@ import {
   useToast,
   VStack,
   Spinner,
+  FormErrorMessage,
   Flex,
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
@@ -105,7 +106,12 @@ const CreateProposal = () => {
   const router = useRouter();
   const { network } = useNetwork();
 
-  const { register, getValues } = useForm({
+  const {
+    register,
+    getValues,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       title: '',
       description: '',
@@ -135,6 +141,11 @@ const CreateProposal = () => {
   const [state, setState] = useState({ isProposed: false });
 
   const { isProposed } = state;
+
+  const onSubmit = (data: any) => {
+    console.log(data);
+    setStep(currentStep + 1);
+  };
 
   usePolling(() => {
     fetchTransactionData(transaction.txId);
@@ -375,13 +386,7 @@ const CreateProposal = () => {
 
   const ProposalDetails = () => {
     return (
-      <motion.div
-        variants={FADE_IN_VARIANTS}
-        initial={FADE_IN_VARIANTS.hidden}
-        animate={FADE_IN_VARIANTS.enter}
-        exit={FADE_IN_VARIANTS.exit}
-        transition={{ duration: 0.5, type: 'linear' }}
-      >
+      <>
         <Stack
           spacing="0"
           mb="5"
@@ -399,7 +404,7 @@ const CreateProposal = () => {
           </Stack>
         </Stack>
         <Stack color="light.900" spacing="6" direction="column" maxW="xl">
-          <FormControl>
+          <FormControl isInvalid={errors.title ? true : false}>
             <Input
               color="light.900"
               fontSize="xl"
@@ -412,12 +417,15 @@ const CreateProposal = () => {
               autoComplete="off"
               placeholder="Proposal for..."
               {...register('title', {
-                required: 'This is required',
+                required: 'Title is required',
               })}
               _focus={{
                 border: 'none',
               }}
             />
+            <FormErrorMessage>
+              {errors.title && errors.title.message}
+            </FormErrorMessage>
           </FormControl>
         </Stack>
         <Stack
@@ -444,7 +452,7 @@ const CreateProposal = () => {
           maxW="xl"
           mb={'5'}
         >
-          <FormControl>
+          <FormControl isInvalid={errors.description ? true : false}>
             <Textarea
               color="light.900"
               fontSize="xl"
@@ -453,25 +461,31 @@ const CreateProposal = () => {
               pl="2"
               bg="base.900"
               border="none"
-              rows={10}
+              rows={5}
               resize="none"
               autoComplete="off"
               placeholder="This proposal once passed will..."
               {...register('description', {
-                required: 'This is required',
+                required: 'description is required',
+                minLength: {
+                  message: 'description must be at least 50 characters',
+                  value: 50,
+                },
               })}
               _focus={{
                 border: 'none',
               }}
             />
+            <FormErrorMessage>
+              {errors.description && errors.description.message}
+            </FormErrorMessage>
           </FormControl>
         </Stack>
-      </motion.div>
+      </>
     );
   };
 
   const ProposalReview = () => {
-    console.log('component render ', contractName);
     return (
       <Stack
         maxW="md"
@@ -766,14 +780,13 @@ const CreateProposal = () => {
               />
             )}
 
-            <form>
-              <FormControl>
-                <ViewStep />
-              </FormControl>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <ViewStep />
+
               <HStack
                 justify="end"
                 position={'fixed'}
-                bottom={'20'}
+                bottom={'10'}
                 right={'20'}
               >
                 {currentStep > 0 && currentStep < 3 && (
@@ -828,12 +841,12 @@ const CreateProposal = () => {
                 )}
                 {(currentStep === 0 || currentStep === 1) && (
                   <Button
+                    type="submit"
                     rightIcon={<FaAngleRight />}
                     w={'15vw'}
                     color="white"
                     variant="outline"
                     bg={'transparent'}
-                    onClick={() => setStep(currentStep + 1)}
                     _hover={{ opacity: 0.9 }}
                     _active={{ opacity: 1 }}
                   >

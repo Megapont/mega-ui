@@ -136,11 +136,19 @@ export const ProposalCard = ({
                         ]}
                       />
                       <Text fontWeight="medium" fontSize="lg" lineHeight="1.15">
-                        {title}
+                        {title
+                          ? title.length > 50
+                            ? truncate(title, 50)
+                            : title
+                          : 'proposal title'}
                       </Text>
                     </HStack>
                     <Text fontWeight="regular" fontSize="sm" color="gray.900">
-                      {description && truncate(description, 50)}
+                      {description
+                        ? description.length > 200
+                          ? truncate(description, 200)
+                          : description
+                        : 'proposal description'}
                     </Text>
                   </Stack>
                 </HStack>
