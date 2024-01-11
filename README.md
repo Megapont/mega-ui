@@ -13,7 +13,7 @@ $ pnpm install
 $ pnpm dev
 ```
 
-##  setup ![supabase]("https://companieslogo.com/img/orig/supabase_BIG.D-94f7cfaf.png?t=1701239800")
+ # <div width="100%" style="display: flex; justify-content:center; align-content:center; flex-direction:row; align:center"><img src="https://github.com/StackerDAOs/mega-dao-fe/assets/55238388/4c0d77b6-289e-4b11-b777-2274ed05bb2d" alt="supabase" width="200"/> <p>Setup</p><div/>
 
 - create a  [supabase account]("https://supabase.com/")
 - Create a new organization and project
