@@ -13,9 +13,12 @@ $ pnpm install
 $ pnpm dev
 ```
 
- # <div width="100%" style="display: flex; justify-content:center; align-content:center; flex-direction:row; align:center"><img src="https://github.com/StackerDAOs/mega-dao-fe/assets/55238388/4c0d77b6-289e-4b11-b777-2274ed05bb2d" alt="supabase" width="200"/> <p>Setup</p><div/>
+<div style="display: flex; align-items: center; align:center">
+  <img src="https://github.com/StackerDAOs/mega-dao-fe/assets/55238388/4c0d77b6-289e-4b11-b777-2274ed05bb2d" alt="supabase" width="200"/>
+  <span >Setup</span>
+</div>
 
-- create a  [supabase account]("https://supabase.com/")
+- create a [supabase account]("https://supabase.com/")
 - Create a new organization and project
 - Go to project settings and copy the url and anon key
 - Create a new table called `Proposals` with the following columns
