@@ -41,6 +41,7 @@ import {
   FaCheckCircle,
   FaInfoCircle,
   FaArrowLeft,
+  FaStopCircle,
 } from 'react-icons/fa';
 
 // Stacks
@@ -275,20 +276,53 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
                         </HStack>
                       </Badge>
                     ) : proposalInfo?.proposal?.concluded ? (
-                      <Badge
-                        bg="base.800"
-                        color="secondary.900"
-                        size="sm"
-                        px="3"
-                        py="1"
-                      >
-                        <HStack>
-                          <FaInfoCircle fontSize="0.9rem" />
-                          <Text fontSize="sm" fontWeight="medium">
-                            Proposal is concluded
-                          </Text>
-                        </HStack>
-                      </Badge>
+                      <>
+                        <Badge
+                          bg="base.800"
+                          color="secondary.900"
+                          size="sm"
+                          px="3"
+                          py="1"
+                        >
+                          <HStack>
+                            <FaInfoCircle fontSize="0.9rem" />
+                            <Text fontSize="sm" fontWeight="medium">
+                              Proposal is concluded
+                            </Text>
+                          </HStack>
+                        </Badge>
+                        {proposalInfo?.proposal?.passed ? (
+                          <Badge
+                            bg="base.800"
+                            color="green.500"
+                            size="sm"
+                            px="3"
+                            py="1"
+                          >
+                            <HStack>
+                              <FaCheckCircle fontSize="0.9rem" />
+                              <Text fontSize="sm" fontWeight="medium">
+                                passed
+                              </Text>
+                            </HStack>
+                          </Badge>
+                        ) : (
+                          <Badge
+                            bg="base.800"
+                            color="red.900"
+                            size="sm"
+                            px="3"
+                            py="1"
+                          >
+                            <HStack>
+                              <FaStopCircle fontSize="0.9rem" />
+                              <Text fontSize="sm" fontWeight="medium">
+                                rejected
+                              </Text>
+                            </HStack>
+                          </Badge>
+                        )}
+                      </>
                     ) : isExecutable && !isEligible ? (
                       <Badge
                         bg="base.800"

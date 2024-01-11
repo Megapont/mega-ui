@@ -56,9 +56,6 @@ export const VoteManyButton = (props: TVoteManyButtonProps) => {
   };
 
   const handleVote = useCallback(async () => {
-    if (isDisabled) {
-      return;
-    }
     const delegatorAddresses = map(delegatorData, 'delegatorAddress');
     const delegateVote = listCV([
       tupleCV({
@@ -112,8 +109,9 @@ export const VoteManyButton = (props: TVoteManyButtonProps) => {
 
   const decisionText = voteFor ? 'approve' : 'reject';
   const onFinish = async (data: any) => {
-    updateVote();
     setTransactionId(data.txId);
+    updateVote();
+
     toast({
       duration: 5000,
       position: 'bottom-right',
@@ -134,7 +132,16 @@ export const VoteManyButton = (props: TVoteManyButtonProps) => {
   const isDisabled = isRequestPending || isPending || isSuccessful;
 
   return (
-    <Button {...props} onClick={handleVote} disabled={isDisabled}>
+    <Button
+      {...props}
+      onClick={() => {
+        if (isDisabled) {
+          return;
+        }
+        handleVote();
+      }}
+      disabled={isDisabled}
+    >
       {isPending ? (
         <Spinner size="xs" />
       ) : isSuccessful ? (
