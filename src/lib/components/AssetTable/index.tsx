@@ -1,34 +1,32 @@
-import { useEffect, useState } from 'react';
 import {
   HStack,
   Table,
   TableContainer,
-  Thead,
-  Th,
   TableProps,
   Tbody,
   Td,
   Text,
+  Th,
+  Thead,
   Tr,
 } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 
 // Components
 import { EmptyState } from '@lib/components/EmptyState';
 
 // Web3
-import { fetchReadOnlyFunction } from 'micro-stacks/api';
 
 // Utils
-import { ustxToStx, convertToken } from '@common/helpers';
+import { convertToken, ustxToStx } from '@common/helpers';
 import Avatar from 'boring-avatars';
 
 // Queries
 import { useToken } from '@common/queries';
 
 // Animation
-import { motion } from 'framer-motion';
 import { FADE_IN_VARIANTS } from '@utils/animation';
-import { stacksNetwork } from '@lib/common/constants';
+import { motion } from 'framer-motion';
 
 type AssetTableProps = {
   type: string;
@@ -67,7 +65,6 @@ export const AssetTable = (props: TableProps & AssetTableProps) => {
   });
 
   useEffect(() => {
-    const network = new stacksNetwork();
     const fetchAssets = async () => {
       try {
         const fetchAssetData = async (
@@ -79,38 +76,27 @@ export const AssetTable = (props: TableProps & AssetTableProps) => {
           { contractAddress, contractName }: any
         ) => {
           const senderAddress = `${contractAddress}.${contractName}`;
-          const name = await fetchReadOnlyFunction({
-            network,
-            contractAddress,
-            contractName,
-            senderAddress,
-            functionArgs: [],
-            functionName: 'get-name',
-          });
-          const symbol = await fetchReadOnlyFunction({
-            network,
-            contractAddress,
-            contractName,
-            senderAddress,
-            functionArgs: [],
-            functionName: 'get-symbol',
-          });
-          const decimals = await fetchReadOnlyFunction({
-            network,
-            contractAddress,
-            contractName,
-            senderAddress,
-            functionArgs: [],
-            functionName: 'get-decimals',
-          });
-          const tokenUri = await fetchReadOnlyFunction({
-            network,
-            contractAddress,
-            contractName,
-            senderAddress,
-            functionArgs: [],
-            functionName: 'get-token-uri',
-          });
+          const nameResponse = await fetch(
+            `/api/get-token/${senderAddress}?functionName=get-name`
+          );
+          const { data: name } = await nameResponse.json();
+
+          const symbolResponse = await fetch(
+            `/api/get-token/${senderAddress}?functionName=get-symbol`
+          );
+          const { data: symbol } = await symbolResponse.json();
+
+          const decimalsResponse = await fetch(
+            `/api/get-token/${senderAddress}?functionName=get-decimals`
+          );
+
+          const { data: decimals } = await decimalsResponse.json();
+
+          const tokenUriResponse = await fetch(
+            `/api/get-token/${senderAddress}?functionName=get-token-uri`
+          );
+          const { data: tokenUri } = await tokenUriResponse.json();
+
           return {
             contractAddress: `${contractAddress}.${contractName}`,
             name,
@@ -118,7 +104,7 @@ export const AssetTable = (props: TableProps & AssetTableProps) => {
             totalSent,
             totalReceived,
             symbol,
-            decimals,
+            decimals: parseInt(decimals),
             tokenUri,
           };
         };
@@ -152,7 +138,8 @@ export const AssetTable = (props: TableProps & AssetTableProps) => {
       }
     };
     fetchAssets();
-  }, [balance, fungibleTokens, state]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [balance]);
 
   const listItems =
     type === 'fungible' ? state.fungibleTokensList : nonFungibleTokensList;

@@ -342,14 +342,14 @@ export async function getEvents(
               item?.proposal?.value === filterByProposal
           )
         : eventName
-          ? serializedEvents?.filter(
-              (item: any) => item?.event?.value === eventName
-            )
-          : filterByProposal
-            ? serializedEvents?.filter(
-                (item: any) => item?.proposal?.value === filterByProposal
-              )
-            : serializedEvents;
+        ? serializedEvents?.filter(
+            (item: any) => item?.event?.value === eventName
+          )
+        : filterByProposal
+        ? serializedEvents?.filter(
+            (item: any) => item?.proposal?.value === filterByProposal
+          )
+        : serializedEvents;
 
     return filteredEvents;
   } catch (e: any) {
