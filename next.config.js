@@ -12,4 +12,30 @@ module.exports = withPWA({
   eslint: {
     dirs: ['src'],
   },
+  async headers() {
+    return [
+      {
+        source: '/api/(.*\\.ts|.*\\.js)',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET',
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value:
+              'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+          },
+        ],
+      },
+    ];
+  }
 });

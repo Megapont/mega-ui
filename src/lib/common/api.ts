@@ -177,20 +177,10 @@ export async function getBalanceOf(vaultAddress: string, assetAddress: string) {
   }
 }
 
-export async function getTokenBalance(
-  address: string,
-  contractAddress: string
-) {
+export async function getTokenBalance(address: string) {
   try {
-    const network = new stacksNetwork();
-    const balance: any = await fetchReadOnlyFunction({
-      network,
-      contractAddress: contractAddress.split('.')[0],
-      contractName: contractAddress.split('.')[1],
-      senderAddress: address,
-      functionArgs: [standardPrincipalCV(address)],
-      functionName: 'get-balance',
-    });
+    const response = await fetch(`/api/get-balance/${address}`);
+    const { balance } = await response.json();
     return balance;
   } catch (e: any) {
     console.error({ e });
