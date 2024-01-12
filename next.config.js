@@ -27,7 +27,7 @@ module.exports = withPWA({
           },
           {
             key: 'Access-Control-Allow-Methods',
-            value: 'GET,OPTIONS,PATCH,DELETE,POST,PUT',
+            value: 'GET',
           },
           {
             key: 'Access-Control-Allow-Headers',
