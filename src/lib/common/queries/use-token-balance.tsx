@@ -16,10 +16,7 @@ export function useTokenBalance() {
   } = useQuery(
     ['user-balance', `${governanceToken?.contractAddress}`, currentStxAddress],
     async () => {
-      const data = await getTokenBalance(
-        currentStxAddress,
-        governanceToken?.contractAddress
-      );
+      const data = await getTokenBalance(currentStxAddress);
       return data;
     },
     {
