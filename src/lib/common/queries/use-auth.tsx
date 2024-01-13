@@ -35,7 +35,7 @@ export function useAuth() {
         `${contractAddress}.${contractName}`,
         'proposeThreshold'
       );
-      const canPropose = balance >= Number(proposeThreshold);
+      const canPropose = balance * Math.pow(10, 2) >= Number(proposeThreshold);
       return { proposeThreshold, canPropose };
     },
     isSignedIn ? signedInOptions : signedOutOptions
@@ -51,7 +51,7 @@ export function useAuth() {
         'voteThreshold'
       );
 
-      const canVote = balance >= Number(voteThreshold);
+      const canVote = balance * Math.pow(10, 2) >= Number(voteThreshold);
       console.log('voteThreshold', voteThreshold);
       return { voteThreshold, canVote };
     },
