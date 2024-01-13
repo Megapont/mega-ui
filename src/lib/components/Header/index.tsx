@@ -5,7 +5,7 @@ import { Stat } from '@lib/components/Stat';
 import { motion } from 'framer-motion';
 import { defaultTo } from 'lodash';
 
-import { convertToken, ustxToStx } from '@common/helpers';
+import { ustxToStx } from '@common/helpers';
 import { FADE_IN_VARIANTS } from '@utils/animation';
 
 export const Header = () => {
