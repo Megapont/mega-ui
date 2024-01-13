@@ -547,7 +547,17 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
                         bg="transparent"
                         borderColor="red.500"
                         size="md"
-                        onClick={() => setIsRemoving(true)}
+                        onClick={() => {
+                          if (
+                            !isSignedIn ||
+                            !proposalContractAddress ||
+                            proposalContractAddress !== currentStxAddress
+                          ) {
+                            return;
+                          }
+
+                          setIsRemoving(true);
+                        }}
                         disabled={proposalContractAddress !== currentStxAddress}
                         _disabled={{
                           bg: 'transparent',
