@@ -150,7 +150,8 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
     }
   };
 
-  const isEligible = balance * Math.pow(10, 2) >= Number(proposalInfo?.voteThreshold);
+  const isEligible =
+    balance * Math.pow(10, 2) >= Number(proposalInfo?.voteThreshold);
 
   const totalVotes =
     Number(proposalInfo?.proposal?.votesFor) +
