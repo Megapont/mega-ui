@@ -675,10 +675,7 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
                         Voting power
                       </Text>
                       <Text color="light.900" fontWeight="regular">
-                        {convertToken(
-                          defaultTo(balance, 0)?.toString(),
-                          Number(token?.decimals || 2)
-                        )}{' '}
+                        {defaultTo(balance, 0)?.toString()}{' '}
                         <Text as="span" color="gray.900" fontWeight="medium">
                           {token?.symbol || 'MEGA'}
                         </Text>
