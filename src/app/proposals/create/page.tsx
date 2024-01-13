@@ -166,7 +166,8 @@ const CreateProposal = () => {
     currentBlockHeight + Number(submissionData?.minimumProposalStartDelay) + 25;
   const endBlockHeight =
     startBlockHeight + Number(submissionData?.proposalDuration);
-  const canPropose = balance * Math.pow(10, 2) >= Number(submissionData?.proposeThreshold);
+  const canPropose =
+    balance * Math.pow(10, 2) >= Number(submissionData?.proposeThreshold);
 
   const onFinishUpdate = async (data: any) => {
     setTransaction({ txId: data.txId, isPending: true });
