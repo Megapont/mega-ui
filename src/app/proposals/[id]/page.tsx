@@ -104,6 +104,7 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
   const [info, setInfo] = useState({
     title: '',
     description: '',
+    proposer: '',
   });
   const voting = { contractAddress: MEGA_VOTING_CONTRACT };
   const {
@@ -123,13 +124,15 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
       try {
         const { data, error }: any = await supabase
           .from('Proposals')
-          .select('title, description, contractAddress')
-          .eq('contractAddress', proposalPrincipal);
+          .select('title, description, contractAddress, proposer')
+          .eq('contractAddress', proposalPrincipal)
+          .limit(1);
         if (error) throw error;
         if (data) {
           setInfo({
             title: data[0].title,
             description: data[0].description,
+            proposer: data[0].proposer,
           });
         }
       } catch (e: any) {
@@ -534,9 +537,7 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
                         bg: 'base.800',
                         opacity: 0.5,
                       }}
-                      notDeployer={
-                        proposalContractAddress !== currentStxAddress
-                      }
+                      notDeployer={info?.proposer !== currentStxAddress}
                       w="20vw"
                       proposalPrincipal={proposalPrincipal}
                     />
