@@ -551,8 +551,9 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
                         onClick={() => {
                           if (
                             !isSignedIn ||
-                            !proposalContractAddress ||
-                            proposalContractAddress !== currentStxAddress
+                            !proposalPrincipal.split('.')[0] ||
+                            proposalPrincipal.split('.')[0] !==
+                              currentStxAddress
                           ) {
                             return;
                           }
