@@ -929,8 +929,8 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
                                     target="_blank"
                                     href={
                                       process.env.NODE_ENV !== 'production'
-                                        ? `http://localhost:8000/txid/${proposalContractAddress}.${proposalContractName}?chain=testnet`
-                                        : `https://explorer.stacks.co/txid/${proposalContractAddress}.${proposalContractName}?chain=mainnet`
+                                        ? `http://localhost:8000/txid/${proposalPrincipal}?chain=testnet`
+                                        : `https://explorer.stacks.co/txid/${proposalPrincipal}?chain=mainnet`
                                     }
                                   >
                                     <Text
