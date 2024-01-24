@@ -1,7 +1,11 @@
-import { StacksMainnet, StacksMocknet } from 'micro-stacks/network';
+import {
+  StacksMainnet,
+  //StacksMocknet,
+  StacksTestnet,
+} from 'micro-stacks/network';
 
 export const stacksNetwork =
-  process.env.NODE_ENV === 'production' ? StacksMainnet : StacksMocknet;
+  process.env.NODE_ENV === 'production' ? StacksMainnet : StacksTestnet;
 
 export const baseUrl =
   process.env.NODE_ENV === 'production'
@@ -31,7 +35,7 @@ export const MEGA_VOTING_CONTRACT = devnet
   : 'SPKPXQ0X3A4D1KZ4XTP1GABJX1N36VW10D02TK9X.mega-voting-v2';
 
 export const STACKS_API_URL = devnet
-  ? 'http://localhost:3999'
+  ? 'https://stacks-node-api.testnet.stacks.co'
   : 'https://stacks-node-api.testnet.stacks.co';
 
 export const traitPrincipal = devnet

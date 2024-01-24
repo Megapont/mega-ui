@@ -20,6 +20,7 @@ export async function GET(
       functionArgs: [standardPrincipalCV(params.address)],
       functionName: 'get-balance',
     });
+
     return NextResponse.json({ balance: tokenToNumber(parseInt(balance), 2) });
   } catch (e: any) {
     console.error({ e });
