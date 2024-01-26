@@ -9,7 +9,7 @@ export const stacksNetwork =
 
 export const baseUrl =
   process.env.NODE_ENV === 'production'
-    ? 'https://dao.megapont.com'
+    ? 'https://dao.megapont.com/'
     : 'http://localhost:3000/';
 
 export const devnet = process.env.NODE_ENV === 'development';
@@ -41,6 +41,10 @@ export const STACKS_API_URL = devnet
 export const traitPrincipal = devnet
   ? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM'
   : 'SPX9XMC02T56N9PRXV4AM9TS88MMQ6A1Z3375MHD';
+
+export const forumChannelID = devnet
+  ? '1196847949087522937'
+  : '1196847949087522937';
 
 export const appDetails = {
   name: 'MegaDAO',
