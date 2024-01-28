@@ -9,8 +9,8 @@ import { Button, Text } from '@chakra-ui/react';
 import { useAuth, useNetwork } from '@micro-stacks/react';
 import {
   StacksMainnet,
-  //StacksMocknet,
-  StacksTestnet,
+  StacksMocknet,
+  //StacksTestnet,
 } from 'micro-stacks/network';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -30,7 +30,7 @@ export const WalletConnectButton = (props: ButtonProps) => {
   }, []);
 
   useEffect(() => {
-    setNetwork(devnet ? new StacksTestnet() : new StacksMainnet());
+    setNetwork(devnet ? new StacksMocknet() : new StacksMainnet());
   }, [isSignedIn, setNetwork]);
 
   useEffect(() => {

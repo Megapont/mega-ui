@@ -1,13 +1,10 @@
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '../supabase';
 
-const supabaseUrl = process.env.SUPABASE_URL || '';
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || '';
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 export async function submitProposal(proposal: {
   contractAddress: string;
   startBlockHeight: number;
   endBlockHeight: number;
+  threadID: string;
   submitted: boolean;
 }) {
   try {
@@ -16,6 +13,7 @@ export async function submitProposal(proposal: {
       .update({
         startBlockHeight: proposal.startBlockHeight,
         endBlockHeight: proposal.endBlockHeight,
+        threadID: proposal.threadID,
         submitted: proposal.submitted,
       })
       .match({

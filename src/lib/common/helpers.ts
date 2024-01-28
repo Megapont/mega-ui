@@ -18,7 +18,7 @@ export const lisbeth = localFont({
 
 export const getExplorerLink = (txId: string) => {
   return process.env.NODE_ENV !== 'production'
-    ? `http://explorer.hiro.so/txid/${txId}?chain=testnet`
+    ? `http://localhost:8000/txid/${txId}?chain=testnet`
     : `https://explorer.hiro.so/txid/${txId}?chain=mainnet`;
 };
 

@@ -46,26 +46,33 @@ export async function POST(request: NextRequest) {
 
           if (dbProposal) {
             if (!dbProposal[0].submitted) {
+              const new_thread = await DiscordRequest(
+                `channels/${forumChannelID}/threads`,
+                {
+                  method: 'POST',
+                  body: {
+                    name: `${proposal.split('.')[1]} proposal`,
+                    auto_archive_duration: 1440,
+                    message: {
+                      content: `Heads up! A fresh proposal has just landed.\n proposed by ${truncate(
+                        transaction.metadata.sender,
+                        5,
+                        5
+                      )}\n proposal link: ${baseUrl}proposals/${proposal} \n\n # Title: ${
+                        dbProposal[0].title
+                      }\n\n # Description: ${dbProposal[0].description}`,
+                    },
+                    applied_tags: [proposalTagId],
+                  },
+                }
+              );
+
               submitProposal({
                 contractAddress: proposal,
                 startBlockHeight,
                 endBlockHeight,
+                threadID: new_thread.id,
                 submitted: true,
-              });
-              await DiscordRequest(`channels/${forumChannelID}/threads`, {
-                method: 'POST',
-                body: {
-                  name: `${proposal.split('.')[1]} proposal`,
-                  auto_archive_duration: 1440,
-                  message: {
-                    content: `Heads up! A fresh proposal has just landed. proposed by ${truncate(
-                      transaction.metadata.sender,
-                      5,
-                      5
-                    )} have a look at it here: ${baseUrl}proposals/${proposal}`,
-                  },
-                  applied_tags: [proposalTagId],
-                },
               });
             }
           }

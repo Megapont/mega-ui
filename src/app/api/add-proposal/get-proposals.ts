@@ -1,9 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = process.env.SUPABASE_URL || '';
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || '';
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { supabase } from '../supabase';
 
 export async function getDBProposal(proposal: string) {
   try {
@@ -12,7 +7,8 @@ export async function getDBProposal(proposal: string) {
       .select('*')
       .match({
         contractAddress: proposal,
-      });
+      })
+      .limit(1);
     if (error) throw error;
     return Proposal;
   } catch (e: any) {

@@ -12,8 +12,8 @@ export async function GET(
 ) {
   try {
     const network = new stacksNetwork();
+    console.log('LOGS', params.address, network.coreApiUrl);
     const balance: any = await fetchReadOnlyFunction({
-      network,
       contractAddress: MEGA_GOVERNANCE_CONTRACT.split('.')[0],
       contractName: MEGA_GOVERNANCE_CONTRACT.split('.')[1],
       senderAddress: params.address,
