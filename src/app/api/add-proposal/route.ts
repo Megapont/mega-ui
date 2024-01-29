@@ -22,9 +22,15 @@ export async function POST(request: NextRequest) {
       method: 'GET',
     });
 
-    const proposalTagId = channel.available_tags.find(
-      (tag: any) => tag.name === 'Proposal'
-    ).id;
+    const tagIds: string[] = channel.available_tags.reduce(
+      (acc: string[], tag: any) => {
+        if (tag.name === 'Proposal' || tag.name === 'Pending') {
+          acc.push(tag.id);
+        }
+        return acc;
+      },
+      []
+    );
 
     const proposalDuration: any = await getParameter(
       submission?.contractAddress,
@@ -58,11 +64,11 @@ export async function POST(request: NextRequest) {
                         transaction.metadata.sender,
                         5,
                         5
-                      )}\n proposal link: ${baseUrl}proposals/${proposal} \n\n # Title: ${
+                      )}\n proposal link: ${baseUrl}proposals/${proposal} \n\n **Title** : ${
                         dbProposal[0].title
-                      }\n\n # Description: ${dbProposal[0].description}`,
+                      }\n\n **Description** : ${dbProposal[0].description}`,
                     },
-                    applied_tags: [proposalTagId],
+                    applied_tags: tagIds,
                   },
                 }
               );

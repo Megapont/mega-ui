@@ -18,8 +18,8 @@ export async function submitProposal(proposal: {
       })
       .match({
         contractAddress: proposal.contractAddress,
-      })
-      .limit(1);
+      });
+
     if (error) throw error;
     return data;
   } catch (e: any) {

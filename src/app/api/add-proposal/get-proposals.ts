@@ -7,8 +7,8 @@ export async function getDBProposal(proposal: string) {
       .select('*')
       .match({
         contractAddress: proposal,
-      })
-      .limit(1);
+      });
+
     if (error) throw error;
     return Proposal;
   } catch (e: any) {
