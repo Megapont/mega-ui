@@ -1,5 +1,4 @@
 // src/app/api/get-balance/route.ts
-import { forumChannelID } from '@lib/common/constants';
 import { DiscordRequest } from '@utils/discord';
 import { NextResponse } from 'next/server';
 // 1196848175269544077 -> general
@@ -7,12 +6,12 @@ import { NextResponse } from 'next/server';
 // 1196847949087522937 => forum channel ID
 export async function GET() {
   try {
-    // const channel = await DiscordRequest(`channels/1201165113542057985`, {
-    //   method: 'DELETE',
-    // });
-    const channel = await DiscordRequest(`channels/${forumChannelID}`, {
-      method: 'GET',
+    const channel = await DiscordRequest(`channels/1201166943604981770`, {
+      method: 'DELETE',
     });
+    // const channel = await DiscordRequest(`channels/${forumChannelID}`, {
+    //   method: 'GET',
+    // });
 
     return NextResponse.json({ message: 'OK', status: 200, data: channel });
   } catch (e: any) {

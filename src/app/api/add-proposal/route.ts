@@ -46,7 +46,8 @@ export async function POST(request: NextRequest) {
             transaction.metadata.description.match(regex)[1];
           const startBlockHeight =
             transaction.metadata.description.match(start_height_regex)[1];
-          const endBlockHeight = startBlockHeight + Number(proposalDuration);
+          const endBlockHeight =
+            Number(startBlockHeight) + Number(proposalDuration);
 
           const dbProposal = await getDBProposal(proposal);
 
