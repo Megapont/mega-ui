@@ -4,9 +4,9 @@ import { NextResponse } from 'next/server';
 // 1196848175269544077 -> general
 // 1196848143959077075 -> proposal
 // 1196847949087522937 => forum channel ID
-export async function GET() {
+export async function DELETE() {
   try {
-    const channel = await DiscordRequest(`channels/1201166943604981770`, {
+    const channel = await DiscordRequest(`channels/1202174232247930920`, {
       method: 'DELETE',
     });
     // const channel = await DiscordRequest(`channels/${forumChannelID}`, {

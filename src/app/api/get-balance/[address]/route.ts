@@ -1,18 +1,15 @@
 // src/app/api/get-balance/route.ts
-import { NextRequest, NextResponse } from 'next/server';
 import { MEGA_GOVERNANCE_CONTRACT } from '@common/constants';
 import { tokenToNumber } from '@lib/common/helpers';
-import { stacksNetwork } from '@common/constants';
 import { fetchReadOnlyFunction } from 'micro-stacks/api';
 import { standardPrincipalCV } from 'micro-stacks/clarity';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { address: string } }
 ) {
   try {
-    const network = new stacksNetwork();
-    console.log('LOGS', params.address, network.coreApiUrl);
     const balance: any = await fetchReadOnlyFunction({
       contractAddress: MEGA_GOVERNANCE_CONTRACT.split('.')[0],
       contractName: MEGA_GOVERNANCE_CONTRACT.split('.')[1],

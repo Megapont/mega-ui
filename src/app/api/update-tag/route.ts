@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 import { getAllDBProposal } from './get-all-proposals';
 import { getCurrentBlockHeight } from './get-current-block-height';
 
-export async function PATCH() {
+export async function GET() {
   try {
     const channel = await DiscordRequest(`channels/${forumChannelID}`, {
       method: 'GET',
@@ -36,7 +36,12 @@ export async function PATCH() {
         ? 'Live'
         : 'Pending';
 
-      console.log(tagName);
+      console.log(
+        tagName,
+        currentBlockHeight,
+        startBlockHeight,
+        endBlockHeight
+      );
 
       const tagIds: string[] = channel.available_tags.reduce(
         (acc: string[], tag: any) => {

@@ -1,18 +1,15 @@
 import { stacksNetwork } from '@lib/common/constants';
-import { fetchBlocks } from 'micro-stacks/api';
 
 export async function getCurrentBlockHeight() {
   try {
     const network = new stacksNetwork();
     const url = network.getCoreApiUrl();
-    const limit = 1;
-    const offset = 0;
-    const blocks = await fetchBlocks({
-      url,
-      limit,
-      offset,
+
+    const blocks = await fetch(`${url}/extended/v2/blocks`, {
+      cache: 'no-store',
     });
-    return blocks.total;
+    const result = await blocks.json();
+    return result.total;
   } catch (e: any) {
     console.error({ e });
   }
