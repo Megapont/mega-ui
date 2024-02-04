@@ -11,8 +11,6 @@ import {
 } from 'micro-stacks/clarity';
 import { useCallback, useState } from 'react';
 
-import { useVoteAgainst, useVoteFor } from '@common/mutations/votes';
-
 // utils
 import { contractPrincipal, getExplorerLink } from '@common/helpers';
 import { MEGA_VOTING_CONTRACT } from '@lib/common/constants';
@@ -36,20 +34,20 @@ export const VoteManyButton = (props: TVoteManyButtonProps) => {
   const [proposalContractAddress, proposalContractName] =
     contractPrincipal(proposalPrincipal);
 
-  const { mutate: voteForMutation } = useVoteFor();
-  const { mutate: voteAgainstMutation } = useVoteAgainst();
+  // const { mutate: voteForMutation } = useVoteFor();
+  // const { mutate: voteAgainstMutation } = useVoteAgainst();
 
-  const updateVote: any = async () => {
-    try {
-      if (voteFor) {
-        await voteForMutation({ proposalPrincipal, amount: 1000000 });
-      } else {
-        await voteAgainstMutation({ proposalPrincipal, amount: 1000000 });
-      }
-    } catch (e: any) {
-      console.error({ e });
-    }
-  };
+  // const updateVote: any = async () => {
+  //   try {
+  //     if (voteFor) {
+  //       await voteForMutation({ proposalPrincipal, amount: 1000000 });
+  //     } else {
+  //       await voteAgainstMutation({ proposalPrincipal, amount: 1000000 });
+  //     }
+  //   } catch (e: any) {
+  //     console.error({ e });
+  //   }
+  // };
   const handleVote = useCallback(async () => {
     const functionArgs = [
       voteFor ? trueCV() : falseCV(),
@@ -132,7 +130,7 @@ export const VoteManyButton = (props: TVoteManyButtonProps) => {
   const decisionText = voteFor ? 'approve' : 'reject';
   const onFinish = async (data: any) => {
     setTransactionId(data.txId);
-    updateVote();
+    // updateVote();
 
     toast({
       duration: 5000,
