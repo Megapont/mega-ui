@@ -18,8 +18,14 @@ export async function GET() {
         status: 404,
       });
     }
+    const validProposals = proposals.filter(
+      (proposal: any) =>
+        proposal.startBlockHeight &&
+        proposal.endBlockHeight &&
+        proposal.threadID
+    );
 
-    proposals.forEach(async (proposal: any) => {
+    validProposals.forEach(async (proposal: any) => {
       const currentBlockHeight = await getCurrentBlockHeight();
       const startBlockHeight = proposal.startBlockHeight;
       const endBlockHeight = proposal.endBlockHeight;
