@@ -17,8 +17,8 @@ const initialContractBoilerplate = `;; This is a boilerplate contract for a prop
 
     ;; edit area starts here
 
-    ;; for text proposals use comments to describe the proposal for example:
-    ;; Proposal to change the megaDAO slogan to something else
+    ;; Title: Proposal to change the megaDAO slogan to something else
+    ;; Description: The current slogan is outdated and we need to change it to something more modern
 
     ;; comment out the below try block if your proposal does not involve fund transfers
 		(try! (contract-call? '${
