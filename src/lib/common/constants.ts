@@ -1,11 +1,7 @@
-import {
-  StacksMainnet,
-  // StacksMocknet,
-  StacksTestnet,
-} from 'micro-stacks/network';
+import { StacksMocknet, StacksTestnet } from 'micro-stacks/network';
 
 export const stacksNetwork =
-  process.env.NODE_ENV === 'production' ? StacksMainnet : StacksTestnet;
+  process.env.NODE_ENV === 'production' ? StacksTestnet : StacksMocknet;
 
 export const baseUrl =
   process.env.NODE_ENV === 'production'
