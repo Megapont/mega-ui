@@ -54,7 +54,13 @@ export async function POST(request: NextRequest) {
 
           const dbProposal = await getDBProposal(proposal);
 
-          console.log('dbProposal', dbProposal);
+          console.log(
+            'dbProposal',
+            dbProposal,
+            proposal,
+            startBlockHeight,
+            endBlockHeight
+          );
 
           if (dbProposal) {
             if (!dbProposal[0].submitted) {
