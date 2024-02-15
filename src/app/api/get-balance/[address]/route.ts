@@ -3,6 +3,7 @@ import { MEGA_GOVERNANCE_CONTRACT } from '@common/constants';
 import { tokenToNumber } from '@lib/common/helpers';
 import { fetchReadOnlyFunction } from 'micro-stacks/api';
 import { standardPrincipalCV } from 'micro-stacks/clarity';
+import { StacksTestnet } from 'micro-stacks/network';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
@@ -11,6 +12,7 @@ export async function GET(
 ) {
   try {
     const balance: any = await fetchReadOnlyFunction({
+      network: new StacksTestnet(),
       contractAddress: MEGA_GOVERNANCE_CONTRACT.split('.')[0],
       contractName: MEGA_GOVERNANCE_CONTRACT.split('.')[1],
       senderAddress: params.address,
