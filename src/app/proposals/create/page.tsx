@@ -304,7 +304,7 @@ const CreateProposal = () => {
                     href={
                       process.env.NODE_ENV !== 'production'
                         ? `http://localhost:8000/txid/${data.tx_id}?chain=testnet`
-                        : `https://explorer.stacks.co/txid/${data.tx_id}?chain=mainnet`
+                        : `https://explorer.stacks.co/txid/${data.tx_id}?chain=testnet`
                     }
                   >
                     View transaction
