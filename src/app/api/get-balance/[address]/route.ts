@@ -46,6 +46,8 @@ export async function GET(
       balance: tokenToNumber(parseInt(await balance.json()), 2),
     });
   } catch (e: any) {
-    console.error({ e });
+    return NextResponse.json({
+      error: e.message,
+    });
   }
 }
