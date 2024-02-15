@@ -10,6 +10,7 @@ export async function GET() {
     const channel = await DiscordRequest(`channels/${forumChannelID}`, {
       method: 'GET',
     });
+    console.log('cron job triggered at', Date.now());
     const proposals = await getAllDBProposal();
     if (!proposals) {
       return NextResponse.json({
