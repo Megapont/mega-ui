@@ -10,7 +10,7 @@ import { useAuth, useNetwork } from '@micro-stacks/react';
 import {
   // StacksMainnet,
   StacksMocknet,
-  StacksTestnet,
+  StacksMainnet,
 } from 'micro-stacks/network';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -30,7 +30,7 @@ export const WalletConnectButton = (props: ButtonProps) => {
   }, []);
 
   useEffect(() => {
-    setNetwork(devnet ? new StacksMocknet() : new StacksTestnet());
+    setNetwork(devnet ? new StacksMocknet() : new StacksMainnet());
   }, [isSignedIn, setNetwork]);
 
   useEffect(() => {

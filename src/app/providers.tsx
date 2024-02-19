@@ -2,13 +2,13 @@
 
 import { CacheProvider } from '@chakra-ui/next-js';
 import { ClientProvider } from '@micro-stacks/react';
-import { StacksTestnet } from 'micro-stacks/network';
+import { StacksMocknet } from 'micro-stacks/network';
 
 import { devnet, appDetails } from '@lib/common/constants';
 import { Chakra as ChakraProvider } from '@lib/components/Chakra';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-const network = new StacksTestnet();
+const network = new StacksMocknet();
 const queryClient = new QueryClient();
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
