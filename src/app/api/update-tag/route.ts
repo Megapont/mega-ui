@@ -10,6 +10,7 @@ export async function GET() {
     const channel = await DiscordRequest(`channels/${forumChannelID}`, {
       method: 'GET',
     });
+    console.log('cron job triggered at', Date.now());
     const proposals = await getAllDBProposal();
     if (!proposals) {
       return NextResponse.json({
@@ -17,8 +18,14 @@ export async function GET() {
         status: 404,
       });
     }
+    const validProposals = proposals.filter(
+      (proposal: any) =>
+        proposal.startBlockHeight &&
+        proposal.endBlockHeight &&
+        proposal.threadID
+    );
 
-    proposals.forEach(async (proposal: any) => {
+    validProposals.forEach(async (proposal: any) => {
       const currentBlockHeight = await getCurrentBlockHeight();
       const startBlockHeight = proposal.startBlockHeight;
       const endBlockHeight = proposal.endBlockHeight;

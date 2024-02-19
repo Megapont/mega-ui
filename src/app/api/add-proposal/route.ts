@@ -39,9 +39,12 @@ export async function POST(request: NextRequest) {
     const regex = /\(([^,]+)/;
     const start_height_regex = /u(\d+)\)/;
 
+    console.log(tagIds, proposalDuration);
+
     events.apply.forEach((item: any) => {
       item.transactions.forEach(async (transaction: any) => {
         if (transaction.metadata.result.includes('true')) {
+          console.log('transaction', transaction);
           const proposal: string =
             transaction.metadata.description.match(regex)[1];
           const startBlockHeight =
@@ -50,6 +53,14 @@ export async function POST(request: NextRequest) {
             Number(startBlockHeight) + Number(proposalDuration);
 
           const dbProposal = await getDBProposal(proposal);
+
+          console.log(
+            'dbProposal',
+            dbProposal,
+            proposal,
+            startBlockHeight,
+            endBlockHeight
+          );
 
           if (dbProposal) {
             if (!dbProposal[0].submitted) {

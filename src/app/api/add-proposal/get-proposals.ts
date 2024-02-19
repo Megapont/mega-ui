@@ -9,6 +9,8 @@ export async function getDBProposal(proposal: string) {
         contractAddress: proposal,
       });
 
+    console.log('Proposal', Proposal, error);
+
     if (error) throw error;
     return Proposal;
   } catch (e: any) {
