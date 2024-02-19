@@ -33,32 +33,6 @@ export const useAddProposal = () => {
   });
 };
 
-export async function updateSubmittedProposal(proposal: {
-  contractAddress: string;
-  startBlockHeight: number;
-  endBlockHeight: number;
-  submitted: boolean;
-}) {
-  try {
-    console.log('updating proposal');
-    const { data, error } = await supabase
-      .from('Proposals')
-      .update({
-        startBlockHeight: proposal.startBlockHeight,
-        endBlockHeight: proposal.endBlockHeight,
-        submitted: proposal.submitted,
-      })
-      .match({
-        contractAddress: proposal.contractAddress,
-      });
-    if (error) throw error;
-    return data;
-  } catch (e: any) {
-    console.log(e);
-    console.error({ e });
-  }
-}
-
 export const useConcludeProposal = () => {
   const queryClient = useQueryClient();
   return useMutation(concludeProposal, {
@@ -84,15 +58,6 @@ export async function concludeProposal(proposal: { contractAddress: string }) {
     console.error({ e });
   }
 }
-
-export const useSubmitProposal = () => {
-  const queryClient = useQueryClient();
-  return useMutation(updateSubmittedProposal, {
-    onSuccess: () => {
-      queryClient.invalidateQueries('contracts');
-    },
-  });
-};
 
 export async function updateDisabledProposal(proposal: {
   contractAddress: string;

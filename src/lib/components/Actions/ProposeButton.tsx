@@ -1,19 +1,16 @@
-import { useCallback, useState } from 'react';
 import type { ButtonProps } from '@chakra-ui/react';
 import { Button, Spinner, useToast } from '@chakra-ui/react';
-import { useOpenContractCall } from '@micro-stacks/react';
-import { uintCV, contractPrincipalCV } from 'micro-stacks/clarity';
-import { TxToast } from '@lib/components/Toast';
 import { useBlocks } from '@common/hooks';
 import { useSubmissionExtension, useTransaction } from '@common/queries';
-
-// Mutations
-import { useSubmitProposal } from '@common/mutations/proposals';
+import { TxToast } from '@lib/components/Toast';
+import { useOpenContractCall } from '@micro-stacks/react';
+import { contractPrincipalCV, uintCV } from 'micro-stacks/clarity';
+import { useCallback, useState } from 'react';
 
 // utils
 import { contractPrincipal, getExplorerLink } from '@common/helpers';
-import { FaCheck } from 'react-icons/fa';
 import { MEGA_SUBMISSION_CONTRACT } from '@lib/common/constants';
+import { FaCheck } from 'react-icons/fa';
 
 type TProposeButtonProps = ButtonProps & {
   text: string;
@@ -30,24 +27,11 @@ export const ProposeButton = (props: TProposeButtonProps) => {
   const { data: submissionData } = useSubmissionExtension();
   const { data: transaction } = useTransaction(transactionId);
   const { openContractCall, isRequestPending } = useOpenContractCall();
-  const { mutate: submitProposal } = useSubmitProposal();
+
   const startBlockHeight =
     currentBlockHeight + Number(submissionData?.minimumProposalStartDelay) + 25;
   const endBlockHeight =
     startBlockHeight + Number(submissionData?.proposalDuration);
-
-  const onFinishUpdate = async () => {
-    try {
-      submitProposal({
-        contractAddress: proposalPrincipal,
-        startBlockHeight,
-        endBlockHeight,
-        submitted: true,
-      });
-    } catch (e: any) {
-      console.error({ e });
-    }
-  };
 
   const handleProposal = useCallback(async () => {
     if (isDisabled) return;
@@ -85,7 +69,6 @@ export const ProposeButton = (props: TProposeButtonProps) => {
   ]);
 
   const onFinish = async (data: any) => {
-    onFinishUpdate();
     setTransactionId(data.txId);
     toast({
       duration: 5000,

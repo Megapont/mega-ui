@@ -25,7 +25,7 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 
 // Web3
-import { useAccount, useNetwork } from '@micro-stacks/react';
+import { useNetwork } from '@micro-stacks/react';
 import { fetchTransaction } from 'micro-stacks/api';
 
 import { useBlocks, usePolling, useStep } from '@common/hooks';
@@ -52,7 +52,6 @@ import { FiSend } from 'react-icons/fi';
 // Store
 import { Editor, loader, type Monaco } from '@monaco-editor/react';
 
-import { useSubmitProposal } from '@lib/common/mutations/proposals';
 import {
   useGenerateName,
   useSubmissionExtension,
@@ -127,7 +126,6 @@ const CreateProposal = () => {
   const { data: contractName } = useGenerateName();
   const toast = useToast();
 
-  const { mutate: submitProposal } = useSubmitProposal();
   const [transaction, setTransaction] = useState({
     txId: '',
     isPending: false,
@@ -138,8 +136,6 @@ const CreateProposal = () => {
     isIdle: tokenBalanceIdle,
   } = useTokenBalance();
   const { currentBlockHeight } = useBlocks();
-
-  const { stxAddress } = useAccount();
 
   const { data: submissionData, isLoading, isIdle } = useSubmissionExtension();
 
@@ -164,23 +160,12 @@ const CreateProposal = () => {
   }, []);
   const startBlockHeight =
     currentBlockHeight + Number(submissionData?.minimumProposalStartDelay) + 25;
-  const endBlockHeight =
-    startBlockHeight + Number(submissionData?.proposalDuration);
+
   const canPropose =
     balance * Math.pow(10, 2) >= Number(submissionData?.proposeThreshold);
 
   const onFinishUpdate = async (data: any) => {
     setTransaction({ txId: data.txId, isPending: true });
-    try {
-      submitProposal({
-        contractAddress: `${stxAddress}.mdp-${contractName}`,
-        startBlockHeight,
-        endBlockHeight,
-        submitted: true,
-      });
-    } catch (e: any) {
-      console.error({ e });
-    }
   };
 
   async function fetchTransactionData(transactionId: string) {

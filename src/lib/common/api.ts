@@ -181,6 +181,7 @@ export async function getTokenBalance(address: string) {
   try {
     const response = await fetch(`/api/get-balance/${address}`);
     const { balance } = await response.json();
+
     return balance;
   } catch (e: any) {
     console.error({ e });

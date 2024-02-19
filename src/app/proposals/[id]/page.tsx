@@ -53,6 +53,7 @@ import {
   convertToken,
   getPercentage,
   tokenToNumber,
+  truncate,
 } from '@common/helpers';
 
 // Queries
@@ -260,7 +261,7 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
                   </HStack>
                   <HStack>
                     <Text fontSize="4xl" fontWeight="medium" color="light.600">
-                      {info?.title}
+                      {truncate(info?.title, 40)}
                     </Text>
                   </HStack>
                   <HStack>

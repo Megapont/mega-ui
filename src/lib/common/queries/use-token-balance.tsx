@@ -17,6 +17,7 @@ export function useTokenBalance() {
     ['user-balance', `${governanceToken?.contractAddress}`, currentStxAddress],
     async () => {
       const data = await getTokenBalance(currentStxAddress);
+
       return data;
     },
     {
