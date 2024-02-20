@@ -38,6 +38,10 @@ export const traitPrincipal = devnet
   ? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM'
   : 'SPX9XMC02T56N9PRXV4AM9TS88MMQ6A1Z3375MHD';
 
+export const forumChannelID = devnet
+  ? '1196847949087522937'
+  : '1196847949087522937';
+
 export const appDetails = {
   name: 'MegaDAO',
   icon: 'https://stackerdaos-assets.s3.us-east-2.amazonaws.com/app/stackerdaos-hiro-logo.png',
