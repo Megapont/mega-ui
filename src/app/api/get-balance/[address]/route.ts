@@ -5,6 +5,8 @@ import { fetchReadOnlyFunction } from 'micro-stacks/api';
 import { standardPrincipalCV } from 'micro-stacks/clarity';
 import { NextRequest, NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { address: string } }
@@ -39,7 +41,6 @@ export async function GET(
       functionArgs: [standardPrincipalCV(params.address)],
       functionName: 'get-balance',
     });
-    console.log(balance);
 
     return NextResponse.json({
       balance: tokenToNumber(parseInt(balance), 2),
