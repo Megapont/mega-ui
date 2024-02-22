@@ -115,7 +115,7 @@ const Proposals = () => {
                                 cannotPropose();
                                 return;
                               }
-                              router.push('/proposals/create');
+                              router.push('/proposals/create/standard');
                             }}
                           ></FaPlusCircle>
                         )}
@@ -236,7 +236,7 @@ const Proposals = () => {
                                 cannotPropose();
                                 return;
                               }
-                              router.push('/proposals/create');
+                              router.push('/proposals/create/standard');
                             }}
                           ></FaPlusCircle>
                         )}
