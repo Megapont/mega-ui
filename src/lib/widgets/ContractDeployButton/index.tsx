@@ -25,6 +25,7 @@ type ContractDeployType = {
   title: string;
   description: string;
   contractName: string;
+  contractCode?: string;
   onFinish?: (data: any) => void;
   setState: () => void;
 };
@@ -193,9 +194,15 @@ export const ContractDeployButton = (
 
   const handleContractDeploy = async () => {
     console.log('contractName', contractName);
+    let deployCode;
+    if (props.contractCode) {
+      deployCode = props.contractCode;
+    } else {
+      deployCode = code;
+    }
     await openContractDeploy({
       contractName,
-      codeBody: code,
+      codeBody: deployCode,
       onFinish: onFinishInsert,
       onCancel: () => {
         console.log('popup closed!');

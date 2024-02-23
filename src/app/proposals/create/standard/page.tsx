@@ -21,10 +21,14 @@ import {
   useBreakpointValue,
   useToast,
   VStack,
+  Radio,
+  RadioGroup,
+  Image,
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 
 // Web3
+import { validateStacksAddress } from 'micro-stacks/crypto';
 import { useNetwork } from '@micro-stacks/react';
 import { fetchTransaction } from 'micro-stacks/api';
 
@@ -47,18 +51,22 @@ import {
   FaFileUpload,
   FaPaperclip,
 } from 'react-icons/fa';
-import { FiSend } from 'react-icons/fi';
 
 // Store
 import { Editor, loader, type Monaco } from '@monaco-editor/react';
 
+import {
+  MEGA_GOVERNANCE_CONTRACT,
+  MEGA_VAULT_CONTRACT,
+  traitPrincipal,
+} from '@lib/common/constants';
 import {
   useGenerateName,
   useSubmissionExtension,
   useTokenBalance,
 } from '@lib/common/queries';
 import { EmptyState } from '@lib/components/EmptyState';
-import { useStore as useCodeStore } from '@lib/store/CodeStore';
+
 import { ContractDeployButton } from '@lib/widgets/ContractDeployButton';
 import { ProposeButton } from '@lib/widgets/ProposeButton';
 import { useRouter } from 'next/navigation';
@@ -69,6 +77,44 @@ const FADE_IN_VARIANTS = {
   exit: { opacity: 0, x: 0, y: 0 },
 };
 
+const generateCode = (
+  title: string,
+  description: string,
+  paymentEnabled?: boolean,
+  stx?: boolean,
+  amount?: number,
+  recipient?: string
+) => {
+  console.log({ title, description, paymentEnabled, stx, amount, recipient });
+  return `;; This is a boilerplate contract for a proposal 
+
+
+(impl-trait '${traitPrincipal}.proposal-trait.proposal-trait)
+
+(define-constant MICRO (pow u10 u2))
+(define-constant STXMICRO (pow u10 u6))
+
+(define-public (execute (sender principal))
+	(begin
+
+    ;; Title: ${title}
+    ;; Description: ${description}
+
+    ${
+      paymentEnabled
+        ? stx
+          ? `(try! (contract-call? '${MEGA_VAULT_CONTRACT} transfer (* STXMICRO u${amount}) '${recipient}))`
+          : `(try! (contract-call? '${MEGA_VAULT_CONTRACT} transfer-ft '${MEGA_GOVERNANCE_CONTRACT} (* MICRO u${amount}) '${recipient}))`
+        : ''
+    }
+
+		(print {event: "execute", sender: sender})
+
+		(ok true)
+	)
+)
+  `;
+};
 // Function to define Clarity language
 const defineClarityLanguage = (monaco: Monaco) => {
   monaco.languages.register({ id: 'clarity' });
@@ -109,17 +155,21 @@ const defineClarityLanguage = (monaco: Monaco) => {
 const CreateProposal = () => {
   const router = useRouter();
   const { network } = useNetwork();
-
-  const { register, getValues, handleSubmit } = useForm({
+  const [code, setCode] = useState('');
+  const { register, getValues, handleSubmit, watch } = useForm({
     defaultValues: {
       title: '',
       description: '',
+      paymentEnabled: 'NO',
+      asset: 'STX',
+      amount: 0,
+      recipient: '',
     },
   });
 
-  const { title, description } = getValues();
+  const { title, description, paymentEnabled } = getValues();
   const [currentStep, { setStep }] = useStep({
-    maxStep: 4,
+    maxStep: 3,
     initialStep: 0,
   });
 
@@ -145,6 +195,15 @@ const CreateProposal = () => {
 
   const onSubmit = (data: any) => {
     console.log(data);
+    const recipientIsValid = validateStacksAddress(data.recipient);
+    if (!recipientIsValid) {
+      toast({
+        title: 'Invalid recipient address',
+        description: 'Please provide a valid STX address',
+        position: 'top-right',
+      });
+      return;
+    }
     setStep(currentStep + 1);
   };
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -192,90 +251,255 @@ const CreateProposal = () => {
   const ProposalDetails = () => {
     console.log('rendered');
     return (
-      <>
-        <Stack
-          spacing="0"
-          mb="5"
-          direction={{ base: 'column', md: 'column' }}
-          justify="space-between"
-          color="white"
-        >
-          <Text fontSize="2xl" fontWeight="semibold" color="light.900">
-            Proposal Title
-          </Text>
-          <Stack direction="column">
-            <Text fontSize="sm" fontWeight="regular" color="gray.900">
-              Title for the new proposal
+      <Box overflowY={'auto'} maxHeight={'70vh'} w={'full'} p={10}>
+        <div>
+          <Stack
+            spacing="0"
+            mb="5"
+            direction={{ base: 'column', md: 'column' }}
+            justify="space-between"
+            color="white"
+          >
+            <Text fontSize="2xl" fontWeight="semibold" color="light.900">
+              Proposal Title
             </Text>
+            <Stack direction="column">
+              <Text fontSize="sm" fontWeight="regular" color="gray.900">
+                Title for the new proposal
+              </Text>
+            </Stack>
           </Stack>
-        </Stack>
-        <Stack color="light.900" spacing="6" direction="column" maxW="xl">
-          <FormControl>
-            <Input
-              required
-              color="light.900"
-              fontSize="xl"
-              py="1"
-              px="2"
-              pl="2"
-              bg="base.900"
-              border="none"
-              resize="none"
-              autoComplete="off"
-              placeholder="Proposal for..."
-              {...register('title')}
-              _focus={{
-                border: 'none',
-              }}
-            />
-          </FormControl>
-        </Stack>
-        <Stack
-          spacing="0"
-          mt="10"
-          mb="5"
-          direction={{ base: 'column', md: 'column' }}
-          justify="space-between"
-          color="white"
-        >
-          <Text fontSize="2xl" fontWeight="semibold" color="light.900">
-            Proposal details
-          </Text>
-          <Stack direction="column">
-            <Text fontSize="sm" fontWeight="regular" color="gray.900">
-              Provide some additional context for the proposal.
+          <Stack color="light.900" spacing="6" direction="column" maxW="xl">
+            <FormControl>
+              <Input
+                required
+                color="light.900"
+                fontSize="xl"
+                py="1"
+                px="2"
+                pl="2"
+                bg="base.900"
+                border="none"
+                resize="none"
+                autoComplete="off"
+                placeholder="Proposal for..."
+                {...register('title')}
+                _focus={{
+                  border: 'none',
+                }}
+              />
+            </FormControl>
+          </Stack>
+          <Stack
+            spacing="0"
+            mt="10"
+            mb="5"
+            direction={{ base: 'column', md: 'column' }}
+            justify="space-between"
+            color="white"
+          >
+            <Text fontSize="2xl" fontWeight="semibold" color="light.900">
+              Proposal details
             </Text>
+            <Stack direction="column">
+              <Text fontSize="sm" fontWeight="regular" color="gray.900">
+                Provide some additional context for the proposal.
+              </Text>
+            </Stack>
           </Stack>
-        </Stack>
-        <Stack
-          color="light.900"
-          spacing="6"
-          direction="column"
-          maxW="xl"
-          mb={'5'}
-        >
-          <FormControl>
-            <Textarea
-              color="light.900"
-              fontSize="xl"
-              required
-              py="1"
-              px="2"
-              pl="2"
-              bg="base.900"
-              border="none"
-              rows={5}
-              resize="none"
-              autoComplete="off"
-              placeholder="This proposal once passed will..."
-              {...register('description')}
-              _focus={{
-                border: 'none',
-              }}
-            />
-          </FormControl>
-        </Stack>
-      </>
+          <Stack
+            color="light.900"
+            spacing="6"
+            direction="column"
+            maxW="xl"
+            mb={'5'}
+          >
+            <FormControl>
+              <Textarea
+                color="light.900"
+                fontSize="xl"
+                required
+                py="1"
+                px="2"
+                pl="2"
+                bg="base.900"
+                border="none"
+                rows={5}
+                resize="none"
+                autoComplete="off"
+                placeholder="This proposal once passed will..."
+                {...register('description')}
+                _focus={{
+                  border: 'none',
+                }}
+              />
+            </FormControl>
+          </Stack>
+          <Stack
+            spacing="0"
+            mb="5"
+            direction={{ base: 'column', md: 'column' }}
+            justify="space-between"
+            color="white"
+          >
+            <Text fontSize="2xl" fontWeight="semibold" color="light.900">
+              Fund transfer
+            </Text>
+            <Stack direction="column">
+              <Text fontSize="sm" fontWeight="regular" color="gray.900">
+                Does your proposal involve a fund transfer?
+              </Text>
+            </Stack>
+          </Stack>
+          <Stack color="light.900" spacing="6" direction="column" maxW="xl">
+            <FormControl>
+              <RadioGroup
+                defaultValue={paymentEnabled}
+                onChange={() => watch('paymentEnabled')}
+              >
+                <Stack direction="row" gap={5}>
+                  <Radio {...register('paymentEnabled')} value="YES">
+                    Yes
+                  </Radio>
+                  <Radio {...register('paymentEnabled')} value="NO">
+                    No
+                  </Radio>
+                </Stack>
+              </RadioGroup>
+            </FormControl>
+          </Stack>
+          {paymentEnabled === 'YES' && (
+            <>
+              <Stack
+                spacing="0"
+                mb="5"
+                direction={{ base: 'column', md: 'column' }}
+                justify="space-between"
+                color="white"
+              >
+                <Text
+                  fontSize="2xl"
+                  fontWeight="semibold"
+                  color="light.900"
+                  mt={10}
+                >
+                  Choose Asset
+                </Text>
+                <Stack direction="column">
+                  <Text fontSize="sm" fontWeight="regular" color="gray.900">
+                    Which asset do you want to transfer from mega vault?
+                  </Text>
+                </Stack>
+              </Stack>
+              <Stack color="light.900" spacing="6" direction="column" maxW="xl">
+                <FormControl>
+                  <RadioGroup>
+                    <Stack direction="row" gap={5}>
+                      <Radio {...register('asset')} value="STX">
+                        <Box display={'flex'} alignItems={'center'} gap={1}>
+                          <Image src="/stx.png" w={5} h={5}></Image>
+                          <Text>STX</Text>
+                        </Box>
+                      </Radio>
+                      <Radio {...register('asset')} value="MEGA">
+                        <Box display={'flex'} alignItems={'center'} gap={1}>
+                          <Image src="/mega-coin.webp" w={5} h={5}></Image>
+                          <Text>MEGA</Text>
+                        </Box>
+                      </Radio>
+                    </Stack>
+                  </RadioGroup>
+                </FormControl>
+              </Stack>
+              <Stack
+                spacing="0"
+                mb="5"
+                direction={{ base: 'column', md: 'column' }}
+                justify="space-between"
+                color="white"
+              >
+                <Text
+                  fontSize="2xl"
+                  fontWeight="semibold"
+                  color="light.900"
+                  mt={10}
+                >
+                  Amount
+                </Text>
+                <Stack direction="column">
+                  <Text fontSize="sm" fontWeight="regular" color="gray.900">
+                    How much do you want to transfer?
+                  </Text>
+                </Stack>
+              </Stack>
+              <Stack color="light.900" spacing="6" direction="column" maxW="xl">
+                <FormControl>
+                  <Input
+                    required
+                    type="number"
+                    color="light.900"
+                    fontSize="xl"
+                    py="1"
+                    px="2"
+                    pl="2"
+                    bg="base.900"
+                    border="none"
+                    resize="none"
+                    autoComplete="off"
+                    placeholder="0"
+                    {...register('amount')}
+                    _focus={{
+                      border: 'none',
+                    }}
+                  />
+                </FormControl>
+              </Stack>
+              <Stack
+                spacing="0"
+                mb="5"
+                direction={{ base: 'column', md: 'column' }}
+                justify="space-between"
+                color="white"
+              >
+                <Text
+                  fontSize="2xl"
+                  fontWeight="semibold"
+                  color="light.900"
+                  mt={10}
+                >
+                  Recipient
+                </Text>
+                <Stack direction="column">
+                  <Text fontSize="sm" fontWeight="regular" color="gray.900">
+                    STX address of the recipient
+                  </Text>
+                </Stack>
+              </Stack>
+              <Stack color="light.900" spacing="6" direction="column" maxW="xl">
+                <FormControl>
+                  <Input
+                    required
+                    color="light.900"
+                    fontSize="xl"
+                    py="1"
+                    px="2"
+                    pl="2"
+                    bg="base.900"
+                    border="none"
+                    resize="none"
+                    autoComplete="off"
+                    placeholder="SP3TJ8K..."
+                    {...register('recipient')}
+                    _focus={{
+                      border: 'none',
+                    }}
+                  />
+                </FormControl>
+              </Stack>
+            </>
+          )}
+        </div>
+      </Box>
     );
   };
   const onComplete = useCallback(
@@ -372,7 +596,7 @@ const CreateProposal = () => {
 
   const createProposalSteps = [
     {
-      title: 'Smart Contract Code',
+      title: 'Fill out information for the proposal',
       description:
         currentStep <= 0 ? (
           <></>
@@ -385,31 +609,9 @@ const CreateProposal = () => {
             transition={{ duration: 0.5, type: 'linear' }}
           >
             <HStack>
-              <FiSend fontSize="0.9rem" />
-              <Text fontSize="md" fontWeight="medium" color="light.900">
-                Ready to deploy
-              </Text>
-            </HStack>
-          </motion.div>
-        ),
-    },
-    {
-      title: 'Provide some context for the proposal',
-      description:
-        currentStep <= 1 ? (
-          <></>
-        ) : (
-          <motion.div
-            variants={FADE_IN_VARIANTS}
-            initial={FADE_IN_VARIANTS.hidden}
-            animate={FADE_IN_VARIANTS.enter}
-            exit={FADE_IN_VARIANTS.exit}
-            transition={{ duration: 0.5, type: 'linear' }}
-          >
-            <HStack>
               <FaPaperclip fontSize="0.9rem" />
               <Text fontSize="md" fontWeight="medium" color="light.900">
-                Details submitted
+                Details submitted and ready to deploy
               </Text>
             </HStack>
           </motion.div>
@@ -419,7 +621,7 @@ const CreateProposal = () => {
     {
       title: 'Review & Deploy ',
       description:
-        currentStep <= 2 ? (
+        currentStep <= 1 ? (
           <></>
         ) : (
           <motion.div
@@ -441,7 +643,7 @@ const CreateProposal = () => {
     {
       title: 'Proposal submission',
       description:
-        currentStep <= 3 ? (
+        currentStep <= 2 ? (
           <></>
         ) : (
           <motion.div
@@ -461,43 +663,6 @@ const CreateProposal = () => {
         ),
     },
   ];
-
-  const SmartContractCode = () => {
-    const { code, setCode } = useCodeStore();
-    return (
-      <>
-        <Stack
-          spacing="0"
-          mb="2"
-          direction={{ base: 'column', md: 'column' }}
-          justify="space-between"
-          color="white"
-          h={'80%'}
-        >
-          <Text fontSize="2xl" fontWeight="semibold" color="light.900">
-            Proposal Code
-          </Text>
-          <Stack direction="column">
-            <Text fontSize="sm" fontWeight="regular" color="gray.900">
-              Each proposal in mega DAO is a smart contract. You can write and
-              deploy your clarity contract here
-            </Text>
-          </Stack>
-        </Stack>
-        <Stack color="light.900" spacing="5" direction="column" maxW="4xl">
-          <Stack color="light.900" direction="column" my="2">
-            <Editor
-              height="50vh"
-              theme="vs-dark"
-              defaultLanguage="clarity" // Set to use the custom Clarity language
-              value={code}
-              onChange={(value) => setCode(value as string)}
-            />
-          </Stack>
-        </Stack>
-      </>
-    );
-  };
 
   const ProposalReview = () => {
     return (
@@ -527,7 +692,7 @@ const CreateProposal = () => {
           align="center"
           spacing="5"
         >
-          <Stack w="100%" spacing="1">
+          {/* <Stack w="100%" spacing="1">
             <Text
               color="gray.900"
               fontSize="md"
@@ -559,6 +724,17 @@ const CreateProposal = () => {
                   : description
                 : ''}
             </Text>
+          </Stack> */}
+
+          <Stack w="100%" spacing="1">
+            <Editor
+              options={{ readOnly: true }}
+              height="50vh"
+              width={'40vw'}
+              theme="vs-dark"
+              defaultLanguage="clarity" // Set to use the custom Clarity language
+              value={code}
+            />
           </Stack>
         </Stack>
       </Stack>
@@ -705,15 +881,15 @@ const CreateProposal = () => {
 
   const ViewStep = () => {
     switch (currentStep) {
+      // case 0:
+      //   return <SmartContractCode />;
       case 0:
-        return <SmartContractCode />;
-      case 1:
         return <ProposalDetails />;
-      case 2:
+      case 1:
         return <ProposalReview />;
-      case 3:
+      case 2:
         return <ProposalSubmission />;
-      case 4:
+      case 3:
         return <ProposalSubmitted />;
 
       default:
@@ -803,7 +979,7 @@ const CreateProposal = () => {
                 bottom={'10'}
                 right={'20'}
               >
-                {currentStep > 0 && currentStep < 3 && (
+                {currentStep > 0 && currentStep < 2 && (
                   <Button
                     color="white"
                     variant="outline"
@@ -817,8 +993,8 @@ const CreateProposal = () => {
                     Previous
                   </Button>
                 )}
-                {currentStep > 3 && <></>}
-                {currentStep === 3 && (
+                {currentStep > 2 && <></>}
+                {currentStep === 2 && (
                   <ProposeButton
                     w={'15vw'}
                     label={
@@ -841,19 +1017,20 @@ const CreateProposal = () => {
                     startBlockHeight={startBlockHeight}
                   />
                 )}{' '}
-                {currentStep === 2 && (
+                {currentStep === 1 && (
                   <ContractDeployButton
                     title={title}
                     color="white"
                     bg="secondary.900"
                     colorScheme="base"
                     w={'15vw'}
+                    contractCode={code}
                     contractName={`mdp-${contractName}`}
                     description={description}
                     setState={() => setStep(currentStep + 1)}
                   ></ContractDeployButton>
                 )}
-                {(currentStep === 0 || currentStep === 1) && (
+                {currentStep === 0 && (
                   <Button
                     type="submit"
                     rightIcon={<FaAngleRight />}
@@ -863,6 +1040,29 @@ const CreateProposal = () => {
                     bg={'transparent'}
                     _hover={{ opacity: 0.9 }}
                     _active={{ opacity: 1 }}
+                    onClick={() => {
+                      const {
+                        title,
+                        description,
+                        paymentEnabled,
+                        asset,
+                        amount,
+                        recipient,
+                      } = getValues();
+                      const isPaymentEnabled =
+                        paymentEnabled === 'YES' ? true : false;
+                      const isSTX = asset === 'STX' ? true : false;
+
+                      const codeToBeDeployed = generateCode(
+                        title,
+                        description,
+                        isPaymentEnabled,
+                        isSTX,
+                        amount,
+                        recipient
+                      );
+                      setCode(codeToBeDeployed);
+                    }}
                   >
                     Next
                   </Button>
