@@ -20,8 +20,8 @@ const initialContractBoilerplate = `;; This is a boilerplate contract for a prop
     ;; Title: Proposal to change the megaDAO slogan to something else
     ;; Description: The current slogan is outdated and we need to change it to something more modern
 
-    ;; comment out the below try block if your proposal does not involve fund transfers
-		(try! (contract-call? '${MEGA_VAULT_CONTRACT} transfer (* MICRO u100) 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6))
+    ;; Uncomment the below try block if your proposal involve fund transfers
+		;; (try! (contract-call? '${MEGA_VAULT_CONTRACT} transfer (* MICRO u100) 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6))
 
 		(print {event: "execute", sender: sender})
 
