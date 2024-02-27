@@ -445,7 +445,7 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
                         px="3"
                         py="1"
                       >
-                        Pending
+                        Voting in progress
                       </Badge>
                     )}
                   </HStack>
