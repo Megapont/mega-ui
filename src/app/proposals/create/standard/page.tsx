@@ -77,14 +77,12 @@ const FADE_IN_VARIANTS = {
 };
 
 const generateCode = (
-  title: string,
-  description: string,
   paymentEnabled?: boolean,
   stx?: boolean,
   amount?: number,
   recipient?: string
 ) => {
-  console.log({ title, description, paymentEnabled, stx, amount, recipient });
+  console.log({ paymentEnabled, stx, amount, recipient });
   return `;; This is a boilerplate contract for a proposal 
 
 
@@ -95,9 +93,6 @@ const generateCode = (
 
 (define-public (execute (sender principal))
 	(begin
-
-    ;; Title: ${title}
-    ;; Description: ${description}
 
     ${
       paymentEnabled
@@ -1032,21 +1027,13 @@ const CreateProposal = () => {
                     _hover={{ opacity: 0.9 }}
                     _active={{ opacity: 1 }}
                     onClick={() => {
-                      const {
-                        title,
-                        description,
-                        paymentEnabled,
-                        asset,
-                        amount,
-                        recipient,
-                      } = getValues();
+                      const { paymentEnabled, asset, amount, recipient } =
+                        getValues();
                       const isPaymentEnabled =
                         paymentEnabled === 'YES' ? true : false;
                       const isSTX = asset === 'STX' ? true : false;
 
                       const codeToBeDeployed = generateCode(
-                        title,
-                        description,
                         isPaymentEnabled,
                         isSTX,
                         amount,
