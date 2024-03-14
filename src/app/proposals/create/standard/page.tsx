@@ -28,7 +28,6 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 
 // Web3
-import { validateStacksAddress } from 'micro-stacks/crypto';
 import { useNetwork } from '@micro-stacks/react';
 import { fetchTransaction } from 'micro-stacks/api';
 
@@ -195,15 +194,7 @@ const CreateProposal = () => {
 
   const onSubmit = (data: any) => {
     console.log(data);
-    const recipientIsValid = validateStacksAddress(data.recipient);
-    if (!recipientIsValid) {
-      toast({
-        title: 'Invalid recipient address',
-        description: 'Please provide a valid STX address',
-        position: 'top-right',
-      });
-      return;
-    }
+
     setStep(currentStep + 1);
   };
   const isMobile = useBreakpointValue({ base: true, md: false });
