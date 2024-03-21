@@ -3,6 +3,75 @@
   font-family: var(--font-lisbeth);
 }
 
+/* .css-12dig9p {
+  background: #29292a;
+  
+ 
+
+}
+.css-18r6e0i {
+  background: #29292a;
+
+}
+.css-17qxlmt {
+  background-color: #29292a;
+}
+.css-hnubqc {
+        background: #17181c;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        border-color: #565a69;
+
+
+    }
+    .css-1gzrj0n {
+        border-color: #565a69;
+    }
+.editor {
+    input {
+        color: #565a69;
+    }
+  color: white;
+  
+} */
+
+.css-hnubqc {
+  background: #17181c;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-color: #565a69;
+}
+.css-1gzrj0n {
+  border-color: #565a69;
+}
+
+.css-17qxlmt.--selected {
+  background-color: #313132;
+  color: white;
+}
+
+.css-1l75xvp {
+  background-color: #313132;
+  color: white;
+}
+
+.css-l584d7:first-of-type {
+  background: rgb(81 82 86);
+}
+.editor {
+  input {
+    color: #565a69;
+  }
+  color: white;
+}
+.editor-read-only {
+  input {
+    color: #565a69;
+  }
+  pointer-events: none;
+  color: white;
+}
+
 .mask {
   font-size: 12vw;
   line-height: 0.9;

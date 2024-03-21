@@ -17,7 +17,6 @@ import {
   Spinner,
   Stack,
   Text,
-  Textarea,
   useBreakpointValue,
   useToast,
   VStack,
@@ -31,7 +30,7 @@ import { fetchTransaction } from 'micro-stacks/api';
 import { useBlocks, usePolling, useStep } from '@common/hooks';
 import { Notification } from '@lib/components/Notification';
 import { VerticalStep } from '@lib/components/VerticalStep';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 
 //  Animation
 import { motion } from 'framer-motion';
@@ -62,6 +61,7 @@ import { useStore as useCodeStore } from '@lib/store/CodeStore';
 import { ContractDeployButton } from '@lib/widgets/ContractDeployButton';
 import { ProposeButton } from '@lib/widgets/ProposeButton';
 import { useRouter } from 'next/navigation';
+import { Editable, useEditor } from '@wysimark/react';
 
 const FADE_IN_VARIANTS = {
   hidden: { opacity: 0, x: 0, y: 0 },
@@ -109,8 +109,11 @@ const defineClarityLanguage = (monaco: Monaco) => {
 const CreateProposal = () => {
   const router = useRouter();
   const { network } = useNetwork();
+  const editor = useEditor({
+    authToken: `${process.env.NEXT_PUBLIC_PORTIVE_KEY}`,
+  });
 
-  const { register, getValues, handleSubmit } = useForm({
+  const { register, getValues, handleSubmit, control } = useForm({
     defaultValues: {
       title: '',
       description: '',
@@ -254,26 +257,19 @@ const CreateProposal = () => {
           maxW="xl"
           mb={'5'}
         >
-          <FormControl>
-            <Textarea
-              color="light.900"
-              fontSize="xl"
-              required
-              py="1"
-              px="2"
-              pl="2"
-              bg="base.900"
-              border="none"
-              rows={5}
-              resize="none"
-              autoComplete="off"
-              placeholder="This proposal once passed will..."
-              {...register('description')}
-              _focus={{
-                border: 'none',
-              }}
-            />
-          </FormControl>
+          <Controller
+            name="description"
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <Editable
+                className="editor"
+                editor={editor}
+                value={field.value}
+                onChange={field.onChange}
+              />
+            )}
+          />
         </Stack>
       </>
     );

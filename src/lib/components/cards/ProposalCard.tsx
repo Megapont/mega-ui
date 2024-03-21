@@ -28,7 +28,7 @@ const FADE_IN_VARIANTS = {
 export const ProposalCard = ({
   contractAddress,
   title,
-  description,
+  //description,
   startBlockHeight,
   endBlockHeight,
   concluded,
@@ -143,13 +143,13 @@ export const ProposalCard = ({
                           : 'proposal title'}
                       </Text>
                     </HStack>
-                    <Text fontWeight="regular" fontSize="sm" color="gray.900">
+                    {/* <Text fontWeight="regular" fontSize="sm" color="gray.900">
                       {description
                         ? description.length > 200
                           ? truncate(description, 200)
                           : description
                         : 'proposal description'}
-                    </Text>
+                    </Text> */}
                   </Stack>
                 </HStack>
                 {/* <Stack direction='column' spacing='3'>

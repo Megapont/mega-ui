@@ -76,6 +76,7 @@ import { VoteManyButton } from '@lib/components/Actions/Voting/VoteManyButton';
 import { ExecuteButton } from '@lib/components/Actions/ExecuteButton';
 import { ProposeButton } from '@lib/components/Actions/ProposeButton';
 import { EmptyState } from '@lib/components/EmptyState';
+import { Editable, useEditor } from '@wysimark/react';
 
 const FADE_IN_VARIANTS = {
   hidden: { opacity: 0, x: 0, y: 0 },
@@ -100,6 +101,8 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
   const { currentBlockHeight } = useBlocks();
   const { isSignedIn } = useAuth();
   const { token } = useToken();
+  const [content, setContent] = useState<string>('');
+  const editor = useEditor({});
   const { balance } = useTokenBalance();
   const isMobile = useBreakpointValue({ base: true, md: false });
   const [info, setInfo] = useState({
@@ -135,6 +138,7 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
             description: data[0].description,
             proposer: data[0].proposer,
           });
+          setContent(data[0].description);
         }
       } catch (e: any) {
         console.error({ e });
@@ -905,7 +909,16 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
                                       Description
                                     </Text>
                                   </Box>
-                                  <Text
+                                  <Box pointerEvents="none">
+                                    <Editable
+                                      className="editor-read-only"
+                                      editor={editor}
+                                      value={content}
+                                      onChange={setContent}
+                                    />
+                                  </Box>
+
+                                  {/* <Text
                                     fontSize="md"
                                     _selection={{
                                       bg: 'base.800',
@@ -913,7 +926,7 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
                                     }}
                                   >
                                     {info?.description}
-                                  </Text>
+                                  </Text> */}
                                 </Stack>
                                 <Stack align="flex-start">
                                   <Box>
@@ -932,7 +945,7 @@ const ProposalView = ({ params }: { params: { id: string } }) => {
                                     href={
                                       process.env.NODE_ENV !== 'production'
                                         ? `http://localhost:8000/txid/${proposalPrincipal}?chain=testnet`
-                                        : `https://explorer.stacks.co/txid/${proposalPrincipal}?chain=mainnet`
+                                        : `https://explorer.hiro.so/txid/${proposalPrincipal}?chain=mainnet`
                                     }
                                   >
                                     <Text

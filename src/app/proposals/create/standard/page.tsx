@@ -17,7 +17,7 @@ import {
   Spinner,
   Stack,
   Text,
-  Textarea,
+  //Textarea,
   useBreakpointValue,
   useToast,
   VStack,
@@ -34,7 +34,7 @@ import { fetchTransaction } from 'micro-stacks/api';
 import { useBlocks, usePolling, useStep } from '@common/hooks';
 import { Notification } from '@lib/components/Notification';
 import { VerticalStep } from '@lib/components/VerticalStep';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 
 //  Animation
 import { motion } from 'framer-motion';
@@ -69,6 +69,7 @@ import { EmptyState } from '@lib/components/EmptyState';
 import { ContractDeployButton } from '@lib/widgets/ContractDeployButton';
 import { ProposeButton } from '@lib/widgets/ProposeButton';
 import { useRouter } from 'next/navigation';
+import { Editable, useEditor } from '@wysimark/react';
 
 const FADE_IN_VARIANTS = {
   hidden: { opacity: 0, x: 0, y: 0 },
@@ -82,9 +83,7 @@ const generateCode = (
   amount?: number,
   recipient?: string
 ) => {
-  console.log({ paymentEnabled, stx, amount, recipient });
   return `;; This is a boilerplate contract for a proposal 
-
 
 (impl-trait '${traitPrincipal}.proposal-trait.proposal-trait)
 
@@ -150,7 +149,7 @@ const CreateProposal = () => {
   const router = useRouter();
   const { network } = useNetwork();
   const [code, setCode] = useState('');
-  const { register, getValues, handleSubmit, watch } = useForm({
+  const { register, getValues, handleSubmit, watch, control } = useForm({
     defaultValues: {
       title: '',
       description: '',
@@ -159,6 +158,9 @@ const CreateProposal = () => {
       amount: 0,
       recipient: '',
     },
+  });
+  const editor = useEditor({
+    authToken: `${process.env.NEXT_PUBLIC_PORTIVE_KEY}`,
   });
 
   const { title, description, paymentEnabled } = getValues();
@@ -236,6 +238,7 @@ const CreateProposal = () => {
   }
   const ProposalDetails = () => {
     console.log('rendered');
+
     return (
       <Box overflowY={'auto'} maxHeight={'70vh'} w={'full'} p={10}>
         <div>
@@ -293,15 +296,27 @@ const CreateProposal = () => {
               </Text>
             </Stack>
           </Stack>
+
           <Stack
-            color="light.900"
+            color="white"
             spacing="6"
             direction="column"
             maxW="xl"
             mb={'5'}
           >
-            <FormControl>
-              <Textarea
+            <Controller
+              name="description"
+              control={control}
+              render={({ field }) => (
+                <Editable
+                  className="editor"
+                  editor={editor}
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              )}
+            />
+            {/* <Textarea
                 color="light.900"
                 fontSize="xl"
                 required
@@ -318,8 +333,7 @@ const CreateProposal = () => {
                 _focus={{
                   border: 'none',
                 }}
-              />
-            </FormControl>
+              /> */}
           </Stack>
           <Stack
             spacing="0"

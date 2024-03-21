@@ -31,6 +31,7 @@
     "@monaco-editor/react": "^4.6.0",
     "@stacks/transactions": "^6.11.0",
     "@supabase/supabase-js": "^2.39.2",
+    "@wysimark/react": "^3.0.20",
     "boring-avatars": "^1.10.1",
     "c32check": "^2.0.0",
     "discord.js": "^14.14.1",
