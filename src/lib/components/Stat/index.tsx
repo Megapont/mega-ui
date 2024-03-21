@@ -34,7 +34,14 @@ export const Stat = (props: Props) => {
   const currentPath = pathname.split('/').filter((p) => p === path)[0];
   const isActivePath = currentPath === path;
   return (
-    <Link passHref href={path === 'governance' ? '' : `/${path}`}>
+    <Link
+      passHref
+      href={
+        path === 'governance'
+          ? 'https://explorer.hiro.so/token/SP3D6PV2ACBPEKYJTCMH7HEN02KP87QSP8KTEH335.mega?chain=mainnet'
+          : `/${path}`
+      }
+    >
       <Card
         bg="base.800"
         minW="20vw"
